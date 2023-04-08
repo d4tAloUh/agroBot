@@ -19,12 +19,10 @@ def process_telegram_event(update_json):
 
 
 def index(request):
-    return JsonResponse({"error": "sup hacker"})
+    return JsonResponse({"error": "you found this page!!!!"})
 
 
 class TelegramBotWebhookView(View):
-    # WARNING: if fail - Telegram webhook will be delivered again.
-    # Can be fixed with async celery task execution
     def post(self, request, *args, **kwargs):
         if DEBUG:
             process_telegram_event(json.loads(request.body))
@@ -34,8 +32,7 @@ class TelegramBotWebhookView(View):
             # Locally, You can run all of these services via docker-compose.yml
             process_telegram_event.delay(json.loads(request.body))
 
-        # e.g. remove buttons, typing event
-        return JsonResponse({"ok": "POST request processed"})
+        return JsonResponse({"ok": "1"})
 
     def get(self, request, *args, **kwargs):  # for debug
-        return JsonResponse({"ok": "Get request received! But nothing done"})
+        return JsonResponse({"ok": "1"})

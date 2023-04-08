@@ -6,12 +6,12 @@ from telegram.ext import CallbackContext
 
 from tgbot.handlers.onboarding import static_text
 from tgbot.handlers.utils.info import extract_user_data_from_update
-from users.models import User
+from users.models import TelegramUser
 from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
-    u, created = User.get_user_and_created(update, context)
+    u, created = TelegramUser.get_user_and_created(update, context)
 
     if created:
         text = static_text.start_created.format(first_name=u.first_name)
@@ -27,8 +27,8 @@ def secret_level(update: Update, context: CallbackContext) -> None:
     """ Pressed 'secret_level_button_text' after /start command"""
     user_id = extract_user_data_from_update(update)['user_id']
     text = static_text.unlock_secret_room.format(
-        user_count=User.objects.count(),
-        active_24=User.objects.filter(updated_at__gte=timezone.now() - datetime.timedelta(hours=24)).count()
+        user_count=TelegramUser.objects.count(),
+        active_24=TelegramUser.objects.filter(updated_at__gte=timezone.now() - datetime.timedelta(hours=24)).count()
     )
 
     context.bot.edit_message_text(

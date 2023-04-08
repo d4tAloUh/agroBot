@@ -9,13 +9,14 @@ from telegram.ext import Updater
 from dtb.settings import TELEGRAM_TOKEN
 from tgbot.dispatcher import setup_dispatcher
 
+DEVELOPER_ID = ''
 
 def run_polling(tg_token: str = TELEGRAM_TOKEN):
     """ Run bot in polling mode """
-    updater = Updater(tg_token, use_context=True)
+    updater = Updater(tg_token)
 
     dp = updater.dispatcher
-    dp = setup_dispatcher(dp)
+    setup_dispatcher(dp)
 
     bot_info = Bot(tg_token).get_me()
     bot_link = f"https://t.me/{bot_info['username']}"

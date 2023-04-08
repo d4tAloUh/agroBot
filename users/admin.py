@@ -4,19 +4,17 @@ from django.shortcuts import render
 
 from dtb.settings import DEBUG
 
-from users.models import Location
-from users.models import User
+from users.models import TelegramUser
 from users.forms import BroadcastForm
 
 from users.tasks import broadcast_message
 from tgbot.handlers.broadcast_message.utils import send_one_message
 
 
-@admin.register(User)
+@admin.register(TelegramUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = [
-        'user_id', 'username', 'first_name', 'last_name', 
-        'language_code', 'deep_link',
+        'user_id', 'username', 'first_name', 'last_name',
         'created_at', 'updated_at', "is_blocked_bot",
     ]
     list_filter = ["is_blocked_bot", ]
@@ -48,7 +46,3 @@ class UserAdmin(admin.ModelAdmin):
                 request, "admin/broadcast_message.html", {'form': form, 'title': u'Broadcast message'}
             )
 
-
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_id', 'created_at']

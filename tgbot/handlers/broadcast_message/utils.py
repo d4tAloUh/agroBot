@@ -4,7 +4,7 @@ import telegram
 from telegram import MessageEntity, InlineKeyboardButton, InlineKeyboardMarkup
 
 from dtb.settings import TELEGRAM_TOKEN
-from users.models import User
+from users.models import TelegramUser
 
 
 def from_celery_markup_to_markup(celery_markup: Optional[List[List[Dict]]]) -> Optional[InlineKeyboardMarkup]:
@@ -54,7 +54,7 @@ def send_one_message(
 ) -> bool:
     bot = telegram.Bot(tg_token)
     try:
-        m = bot.send_message(
+        bot.send_message(
             chat_id=user_id,
             text=text,
             parse_mode=parse_mode,
@@ -65,9 +65,7 @@ def send_one_message(
         )
     except telegram.error.Unauthorized:
         print(f"Can't send message to {user_id}. Reason: Bot was stopped.")
-        User.objects.filter(user_id=user_id).update(is_blocked_bot=True)
         success = False
     else:
         success = True
-        User.objects.filter(user_id=user_id).update(is_blocked_bot=False)
     return success
