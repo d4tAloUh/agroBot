@@ -18,8 +18,6 @@ class AdminTelegramUserManager(Manager):
 
 class TelegramUser(CreateUpdateTracker):
     user_id = models.PositiveBigIntegerField(verbose_name="Chat ID", primary_key=True)  # telegram_id
-    invite_code = models.CharField(verbose_name="ТОВ", max_length=32)  # telegram_id
-
     username = models.CharField(verbose_name="Username", max_length=32, **nb)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256, **nb)
@@ -51,8 +49,3 @@ class TelegramUser(CreateUpdateTracker):
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
 
 
-class CompanyAccount(CreateUpdateTracker):
-    id = models.IntegerField(verbose_name="код ЄДРПОУ", primary_key=True)
-    tov = models.CharField(verbose_name="ТОВ", max_length=1024)
-    name = models.CharField(max_length=512)
-    phone = models.CharField(max_length=15)

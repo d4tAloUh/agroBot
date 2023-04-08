@@ -12,7 +12,9 @@ def send_typing_action(func: Callable):
     @wraps(func)
     def command_func(update, context, *args, **kwargs):
         bot.send_chat_action(
-            chat_id=update.effective_message.chat_id, action=telegram.ChatAction.TYPING)
+            chat_id=update.effective_message.chat_id,
+            action=telegram.ChatAction.TYPING
+        )
         return func(update, context,  *args, **kwargs)
 
     return command_func
