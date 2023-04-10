@@ -31,7 +31,7 @@ class TelegramUser(CreateUpdateTracker):
         return f'@{self.username}' if self.username is not None else f'{self.user_id}'
 
     @classmethod
-    def get_user_and_created(cls, update: Update, context: CallbackContext) -> Tuple[TelegramUser, bool]:
+    def get_user_or_create(cls, update: Update, context: CallbackContext) -> Tuple[TelegramUser, bool]:
         """ python-telegram-bot's Update, Context --> User instance """
         data = extract_user_data_from_update(update)
         u, created = cls.objects.update_or_create(user_id=data["user_id"], defaults=data)
@@ -39,7 +39,7 @@ class TelegramUser(CreateUpdateTracker):
 
     @classmethod
     def get_user(cls, update: Update, context: CallbackContext) -> TelegramUser:
-        u, _ = cls.get_user_and_created(update, context)
+        u, _ = cls.get_user_or_create(update, context)
         return u
 
     @property

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.crypto import get_random_string
 
+from users.models import TelegramUser
 from utils.models import CreateUpdateTracker, nb
 
 
@@ -9,11 +10,15 @@ def get_default_invite_code():
 
 
 class CompanyAccount(CreateUpdateTracker):
-    id = models.IntegerField(verbose_name="код ЄДРПОУ", primary_key=True)
+    id = models.CharField(verbose_name="код ЄДРПОУ", primary_key=True, max_length=64)
     tov = models.CharField(verbose_name="ТОВ", max_length=1024)
     name = models.CharField(max_length=512)
     phone = models.CharField(max_length=15)
     invite_code = models.CharField(max_length=32, **nb)
+    tg_user = models.OneToOneField(TelegramUser,
+                                   on_delete=models.SET_NULL,
+                                   related_name="company_account",
+                                   **nb)
 
     class Meta:
         verbose_name = 'CompanyAccount'
@@ -27,6 +32,7 @@ class CompanyAccount(CreateUpdateTracker):
             self.invite_code = get_default_invite_code()
 
         super().save(*args, **kwargs)
+
 
 class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
@@ -54,8 +60,7 @@ class SubRegion(CreateUpdateTracker):
     name = models.CharField(max_length=512)
     region = models.ForeignKey(Region,
                                on_delete=models.CASCADE,
-                               related_name="subregions",
-                               related_query_name="subregion")
+                               related_name="subregions")
 
     class Meta:
         verbose_name = 'SubRegion'
@@ -69,12 +74,10 @@ class City(CreateUpdateTracker):
     name = models.CharField(max_length=512)
     region = models.ForeignKey(Region,
                                on_delete=models.CASCADE,
-                               related_name="cities",
-                               related_query_name="city")
+                               related_name="cities")
     subregion = models.ForeignKey(SubRegion,
                                   on_delete=models.CASCADE,
-                                  related_name="cities",
-                                  related_query_name="city")
+                                  related_name="cities")
 
     class Meta:
         verbose_name = 'City'
@@ -95,12 +98,10 @@ class SalesPlacement(CreateUpdateTracker):
 
     company = models.ForeignKey(CompanyAccount,
                                 on_delete=models.CASCADE,
-                                related_name="sales",
-                                related_query_name="sale", **nb)
+                                related_name="sales",**nb)
     product = models.ForeignKey(Product,
                                 on_delete=models.PROTECT,
-                                related_name="sales",
-                                related_query_name="sale", **nb)
+                                related_name="sales",**nb)
     weight = models.IntegerField(**nb)
     basis = models.CharField(max_length=1024, **nb)
     price_type = models.CharField(choices=PriceTypeChoice.choices, max_length=2, **nb)
@@ -109,16 +110,13 @@ class SalesPlacement(CreateUpdateTracker):
 
     region = models.ForeignKey(Region,
                                on_delete=models.PROTECT,
-                               related_name="sales",
-                               related_query_name="sale", **nb)
+                               related_name="sales", **nb)
     subregion = models.ForeignKey(SubRegion,
                                   on_delete=models.PROTECT,
-                                  related_name="sales",
-                                  related_query_name="sale", **nb)
+                                  related_name="sales",**nb)
     city = models.ForeignKey(City,
                              on_delete=models.PROTECT,
-                             related_name="sales",
-                             related_query_name="sale", **nb)
+                             related_name="sales",**nb)
 
     class Meta:
         verbose_name = 'Sale placement'

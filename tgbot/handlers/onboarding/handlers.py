@@ -1,23 +1,32 @@
-import datetime
-
-from django.utils import timezone
-from telegram import ParseMode, Update
+from telegram import Update
 from telegram.ext import CallbackContext
 
+from sales.models import CompanyAccount
 from tgbot.handlers.onboarding import static_text
-from tgbot.handlers.utils.info import extract_user_data_from_update
 from users.models import TelegramUser
-from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
+from tgbot.handlers.onboarding.keyboards import make_keyboard_for_successful_link_start_command
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
-    u, created = TelegramUser.get_user_and_created(update, context)
-
-    if created:
-        text = static_text.start_created.format(first_name=u.first_name)
+    u, created = TelegramUser.get_user_or_create(update, context)
+    print(context.args)
+    keyboard = None
+    if context.args and len(context.args) == 1:
+        invite_code = context.args[0]
+        company_account = CompanyAccount.objects.filter(
+            invite_code=invite_code,
+            tg_user__isnull=True
+        ).first()
+        if company_account:
+            company_account.tg_user = u
+            company_account.save()
+            text = static_text.successfully_linked.format(account_name=company_account.name)
+            keyboard = make_keyboard_for_successful_link_start_command()
+        else:
+            text =static_text.unregistered_text
     else:
-        text = static_text.start_not_created.format(first_name=u.first_name)
+        text = static_text.unregistered_text
+
 
     update.message.reply_text(text=text,
-                              reply_markup=make_keyboard_for_start_command())
-
+                              reply_markup=keyboard)

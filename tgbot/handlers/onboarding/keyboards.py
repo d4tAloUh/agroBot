@@ -1,11 +1,12 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-from tgbot.handlers.onboarding.static_text import github_button_text
+from tgbot.handlers.onboarding import static_text
 
 
-def make_keyboard_for_start_command() -> InlineKeyboardMarkup:
+def make_keyboard_for_successful_link_start_command() -> InlineKeyboardMarkup:
     buttons = [[
-        InlineKeyboardButton(github_button_text, url="https://github.com/ohld/django-telegram-bot"),
+        InlineKeyboardButton(static_text.create_new_sale_text,
+                             url="https://github.com/ohld/django-telegram-bot"),
     ]]
 
     return InlineKeyboardMarkup(buttons)
