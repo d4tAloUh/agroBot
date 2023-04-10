@@ -41,7 +41,6 @@ INSTALLED_APPS = [
 
     # 3rd party apps
     'debug_toolbar',
-
     # local apps
     'users.apps.UsersConfig',
     'sales.apps.SalesConfig',
