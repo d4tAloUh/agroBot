@@ -10,14 +10,20 @@ class CompanyAccount(CreateUpdateTracker):
     phone = models.CharField(max_length=15)
     invite_code = models.CharField(max_length=32, **nb)
 
+    def __str__(self):
+        return self.tov
 
 class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
 
+    def __str__(self):
+        return self.name
 
 class Region(CreateUpdateTracker):
     name = models.CharField(max_length=512)
 
+    def __str__(self):
+        return self.name
 
 class SubRegion(CreateUpdateTracker):
     name = models.CharField(max_length=512)
@@ -26,6 +32,8 @@ class SubRegion(CreateUpdateTracker):
                                related_name="subregions",
                                related_query_name="subregion", **nb)
 
+    def __str__(self):
+        return self.name
 
 class City(CreateUpdateTracker):
     name = models.CharField(max_length=512)
@@ -38,6 +46,8 @@ class City(CreateUpdateTracker):
                                   related_name="cities",
                                   related_query_name="city", **nb)
 
+    def __str__(self):
+        return self.name
 
 class SalesPlacement(CreateUpdateTracker):
     class PriceTypeChoice(models.TextChoices):
@@ -74,3 +84,6 @@ class SalesPlacement(CreateUpdateTracker):
                              on_delete=models.PROTECT,
                              related_name="sales",
                              related_query_name="sale", **nb)
+
+    def __str__(self):
+        return f"{self.product} | {self.company}"

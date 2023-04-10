@@ -12,7 +12,7 @@ from tgbot.handlers.broadcast_message.utils import send_one_message
 
 
 @admin.register(TelegramUser)
-class UserAdmin(admin.ModelAdmin):
+class TelegramUserAdmin(admin.ModelAdmin):
     list_display = [
         'user_id', 'username', 'first_name', 'last_name',
         'created_at', 'updated_at',
