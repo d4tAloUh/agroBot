@@ -1,14 +1,21 @@
 from django.contrib import admin
-from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalesPlacement
+from django.utils.safestring import mark_safe
 
+from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalesPlacement
+from dtb.settings import TELEGRAM_BOT_USERNAME
 
 @admin.register(CompanyAccount)
 class CompanyAccountAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'tov', 'name', 'phone',
+        'account_link_url'
     ]
     search_fields = ('name', 'tov', 'phone')
-
+    def account_link_url(self, obj: CompanyAccount):
+        return mark_safe(
+            f"<a href='https://t.me/{TELEGRAM_BOT_USERNAME}?start={obj.invite_code}'>Лінк</a>"
+        )
+    account_link_url.short_description = 'Invite link'
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -36,6 +43,7 @@ class SubRegionAdmin(admin.ModelAdmin):
     def region_name(self, obj: SubRegion):
         return obj.region.name
 
+
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
     list_display = [
@@ -50,6 +58,8 @@ class CityAdmin(admin.ModelAdmin):
 
     def subregion_name(self, obj: City):
         return obj.subregion.name
+
+
 @admin.register(SalesPlacement)
 class SalesPlacementAdmin(admin.ModelAdmin):
     list_display = [

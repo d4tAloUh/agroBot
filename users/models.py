@@ -48,4 +48,7 @@ class TelegramUser(CreateUpdateTracker):
             return f'@{self.username}'
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
 
+    @property
+    def is_registered(self) -> bool:
+        return hasattr(self, "company_account")
 
