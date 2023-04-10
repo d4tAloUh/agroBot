@@ -1,6 +1,11 @@
 from django.db import models
+from django.utils.crypto import get_random_string
 
 from utils.models import CreateUpdateTracker, nb
+
+
+def get_default_invite_code():
+    return get_random_string(length=32)
 
 
 class CompanyAccount(CreateUpdateTracker):
@@ -10,44 +15,74 @@ class CompanyAccount(CreateUpdateTracker):
     phone = models.CharField(max_length=15)
     invite_code = models.CharField(max_length=32, **nb)
 
+    class Meta:
+        verbose_name = 'CompanyAccount'
+        verbose_name_plural = 'Company accounts'
+
     def __str__(self):
         return self.tov
+
+    def save(self, *args, **kwargs):
+        if not self.invite_code:
+            self.invite_code = get_default_invite_code()
+
+        super().save(*args, **kwargs)
 
 class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
 
+    class Meta:
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
+
     def __str__(self):
         return self.name
+
 
 class Region(CreateUpdateTracker):
     name = models.CharField(max_length=512)
 
+    class Meta:
+        verbose_name = 'Region'
+        verbose_name_plural = 'Regions'
+
     def __str__(self):
         return self.name
+
 
 class SubRegion(CreateUpdateTracker):
     name = models.CharField(max_length=512)
     region = models.ForeignKey(Region,
                                on_delete=models.CASCADE,
                                related_name="subregions",
-                               related_query_name="subregion", **nb)
+                               related_query_name="subregion")
+
+    class Meta:
+        verbose_name = 'SubRegion'
+        verbose_name_plural = 'SubRegions'
 
     def __str__(self):
         return self.name
+
 
 class City(CreateUpdateTracker):
     name = models.CharField(max_length=512)
     region = models.ForeignKey(Region,
                                on_delete=models.CASCADE,
                                related_name="cities",
-                               related_query_name="city", **nb)
+                               related_query_name="city")
     subregion = models.ForeignKey(SubRegion,
                                   on_delete=models.CASCADE,
                                   related_name="cities",
-                                  related_query_name="city", **nb)
+                                  related_query_name="city")
+
+    class Meta:
+        verbose_name = 'City'
+        verbose_name_plural = 'Cities'
 
     def __str__(self):
         return self.name
+
 
 class SalesPlacement(CreateUpdateTracker):
     class PriceTypeChoice(models.TextChoices):
@@ -84,6 +119,10 @@ class SalesPlacement(CreateUpdateTracker):
                              on_delete=models.PROTECT,
                              related_name="sales",
                              related_query_name="sale", **nb)
+
+    class Meta:
+        verbose_name = 'Sale placement'
+        verbose_name_plural = 'Sale Placements'
 
     def __str__(self):
         return f"{self.product} | {self.company}"
