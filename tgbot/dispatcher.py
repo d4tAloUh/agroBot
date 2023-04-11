@@ -18,6 +18,10 @@ from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.handlers.sale_creation.product import handlers as product_choosing_sales_handler
 from tgbot.handlers.sale_creation.product.manage_data import CHOOSE_PRODUCT_CALLBACK
 
+
+from tgbot.handlers.menu.manage_data import MENU_CALLBACK_DATA
+from tgbot.handlers.menu import handlers as menu_handlers
+
 from tgbot.main import bot
 
 
@@ -39,6 +43,10 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(product_choosing_sales_handler.callback_product_choosing,
                              pattern=f"^{CHOOSE_PRODUCT_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(menu_handlers.callback_menu,
+                             pattern=f"^{MENU_CALLBACK_DATA}$")
     )
 
     # handling errors

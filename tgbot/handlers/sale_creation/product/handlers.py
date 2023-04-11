@@ -10,10 +10,6 @@ from users.models import TelegramUser
 from tgbot.handlers.sale_creation.product import static_text
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
-def callback_product_choosing_cancel(update: Update, context: CallbackContext) -> None:
-    pass
-
-
 
 
 def callback_product_choosing(update: Update, context: CallbackContext) -> None:
