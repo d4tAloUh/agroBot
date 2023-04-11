@@ -11,6 +11,7 @@ def make_paginated_keyboard(**kwargs) -> InlineKeyboardMarkup:
     prev_page_callback = kwargs.get("prev_page_callback")
     next_page_callback = kwargs.get("next_page_callback")
     go_back_callback = kwargs.get("go_back_callback")
+    go_back_text = kwargs.get("go_back_text", static_text.go_back_text)
     per_row = kwargs.get("per_row", 3)
     rows = kwargs.get("rows", 2)
     markup = []
@@ -43,7 +44,7 @@ def make_paginated_keyboard(**kwargs) -> InlineKeyboardMarkup:
     # Add go back button
     markup.append(
         [InlineKeyboardButton(
-            text=static_text.go_back_text,
+            text=go_back_text,
             callback_data=go_back_callback
         )]
     )

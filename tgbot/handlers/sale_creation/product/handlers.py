@@ -33,7 +33,8 @@ def callback_product_choosing(update: Update, context: CallbackContext) -> None:
         get_item_callback=get_product_chosen_callback_data,
         prev_page_callback=get_choose_product_callback_data(page - 1),
         next_page_callback=get_choose_product_callback_data(page + 1),
-        go_back_callback=get_go_back_from_choose_product_callback_data()
+        go_back_callback=get_go_back_from_choose_product_callback_data(),
+        go_back_text=static_text.go_back_text
     )
     update.callback_query.edit_message_text(
         static_text.choose_product_text,
