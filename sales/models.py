@@ -38,6 +38,7 @@ class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
 
@@ -49,6 +50,7 @@ class Region(CreateUpdateTracker):
     name = models.CharField(max_length=512)
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'Region'
         verbose_name_plural = 'Regions'
 
@@ -63,6 +65,7 @@ class SubRegion(CreateUpdateTracker):
                                related_name="subregions")
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'SubRegion'
         verbose_name_plural = 'SubRegions'
 
@@ -80,6 +83,7 @@ class City(CreateUpdateTracker):
                                   related_name="cities")
 
     class Meta:
+        ordering = ['name']
         verbose_name = 'City'
         verbose_name_plural = 'Cities'
 
