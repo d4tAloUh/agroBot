@@ -6,20 +6,19 @@ from sales.models import Region
 from tgbot.handlers.sale_creation.region import static_text
 from tgbot.handlers.sale_creation.region.utils import get_region_chosen_callback_data, get_choose_region_callback_data, \
     get_go_back_from_choose_region_callback_data
+from tgbot.handlers.sale_creation.subregion.handlers import callback_subregion_choosing
+from tgbot.handlers.sale_creation.subregion.utils import get_choose_subregion_callback_data
 from tgbot.handlers.utils.helpers import extract_page, extract_id
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
 
 def callback_region_chosen(update: Update, context: CallbackContext) -> None:
-    product_id = extract_id(update.callback_query.data)
+    region_id = extract_id(update.callback_query.data)
     # Save selected product id
-    context.user_data["region_id"] = product_id
-    context.bot.send_message(
-        update.effective_chat.id,
-        "ВСЬО"
-    )
-    # # Call next step
-
+    context.user_data["region_id"] = region_id
+    # Call next step
+    update.callback_query.data = get_choose_subregion_callback_data(1)
+    callback_subregion_choosing(update, context)
 
 
 def callback_region_choosing(update: Update, context: CallbackContext) -> None:

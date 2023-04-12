@@ -10,6 +10,7 @@ from telegram.ext import (
 
 from dtb.settings import DEBUG
 from tgbot.handlers.sale_creation.region.manage_data import REGION_CHOSEN_CALLBACK, CHOOSE_REGION_CALLBACK
+from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_CALLBACK, CHOOSE_SUBREGION_CALLBACK
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
 from tgbot.handlers.sale_creation.weight.static_text import WEIGHT_STEP_NAME
 
@@ -24,6 +25,7 @@ from tgbot.handlers.menu import handlers as menu_handlers
 
 from tgbot.handlers.sale_creation.weight import handlers as weight_handlers
 from tgbot.handlers.sale_creation.region import handlers as region_handlers
+from tgbot.handlers.sale_creation.subregion import handlers as subregion_handlers
 
 from tgbot.main import bot
 
@@ -34,6 +36,7 @@ def setup_type_handler(update: Update, context: CallbackContext) -> None:
     if update.message and context.user_data.get("current_step", None) == WEIGHT_STEP_NAME:
         weight_handlers.callback_weight_input(update, context)
         raise DispatcherHandlerStop
+
 
 def setup_dispatcher(dp):
     """
@@ -79,15 +82,18 @@ def setup_dispatcher(dp):
         CallbackQueryHandler(region_handlers.callback_region_chosen,
                              pattern=f"^{REGION_CHOSEN_CALLBACK}")
     )
+
+    # Handle subregion selection
+    dp.add_handler(
+        CallbackQueryHandler(subregion_handlers.callback_subregion_choosing,
+                             pattern=f"^{CHOOSE_SUBREGION_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(subregion_handlers.callback_subregion_chosen,
+                             pattern=f"^{SUBREGION_CHOSEN_CALLBACK}")
+    )
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
-
-    # EXAMPLES FOR HANDLERS
-    # dp.add_handler(MessageHandler(
-    #     Filters.chat(chat_id=int(TELEGRAM_FILESTORAGE_ID)),
-    #     # & Filters.forwarded & (Filters.photo | Filters.video | Filters.animation),
-    #     <function_handler>,
-    # ))
 
     return dp
 

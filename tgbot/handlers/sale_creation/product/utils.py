@@ -1,7 +1,6 @@
 from sales.models import Product
 from tgbot.handlers.menu.manage_data import MENU_CALLBACK_DATA
 from tgbot.handlers.sale_creation.product.manage_data import PRODUCT_CHOSEN_CALLBACK, CHOOSE_PRODUCT_CALLBACK
-from tgbot.handlers.utils import static_text
 from tgbot.handlers.utils.static_text import callback_separator
 
 
