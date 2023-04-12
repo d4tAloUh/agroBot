@@ -7,3 +7,5 @@ def extract_page(callback_text: str) -> int:
     """
     split_text = callback_text.split(static_text.callback_separator)
     return int(split_text[1])
+
+extract_id = extract_page

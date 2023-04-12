@@ -5,16 +5,22 @@ from telegram.ext import CallbackContext
 from sales.models import Product
 from tgbot.handlers.sale_creation.product.utils import get_product_chosen_callback_data, \
     get_choose_product_callback_data, get_go_back_from_choose_product_callback_data
-from tgbot.handlers.utils.helpers import extract_page
-from users.models import TelegramUser
+from tgbot.handlers.sale_creation.weight.handlers import callback_weight_input
+from tgbot.handlers.utils.helpers import extract_page, extract_id
+
 from tgbot.handlers.sale_creation.product import static_text
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
+def callback_product_chosen(update: Update, context: CallbackContext) -> None:
+    product_id = extract_id(update.callback_query.data)
+    # Save selected product id
+    context.user_data["product_id"] = product_id
+    # Call next step
+    callback_weight_input(update, context)
 
 
 def callback_product_choosing(update: Update, context: CallbackContext) -> None:
-    # u = TelegramUser.get_user(update, context)
-
+    context.user_data["current_step"] = static_text.PRODUCT_STEP_NAME
     products = Product.objects.all()
     page = extract_page(update.callback_query.data)
     paginator = Paginator(

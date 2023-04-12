@@ -44,4 +44,5 @@ Return to /start
             parse_mode=telegram.ParseMode.HTML,
         )
     else:
-        logging.error(admin_message)
+        pass
+        # logging.error(admin_message)

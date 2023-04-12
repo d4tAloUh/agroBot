@@ -100,6 +100,11 @@ class SalesPlacement(CreateUpdateTracker):
         UAH = 'uah', 'UAH ₴'
         USD = 'usd', 'USD $'
 
+    class StatusChoice(models.TextChoices):
+        DRAFT = 'draft', 'DRAFT'
+        POSTED = 'posted', 'POSTED'
+        DELETED = 'deleted', 'DELETED'
+
     company = models.ForeignKey(CompanyAccount,
                                 on_delete=models.CASCADE,
                                 related_name="sales",**nb)
@@ -121,6 +126,10 @@ class SalesPlacement(CreateUpdateTracker):
     city = models.ForeignKey(City,
                              on_delete=models.PROTECT,
                              related_name="sales",**nb)
+
+    status = models.CharField(choices=StatusChoice.choices,
+                              default=StatusChoice.DRAFT,
+                              max_length=32)
 
     class Meta:
         verbose_name = 'Sale placement'
