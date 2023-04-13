@@ -9,6 +9,7 @@ from telegram.ext import (
 )
 
 from dtb.settings import DEBUG
+from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
 from tgbot.handlers.sale_creation.region.manage_data import REGION_CHOSEN_CALLBACK, CHOOSE_REGION_CALLBACK
 from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_CALLBACK, CHOOSE_SUBREGION_CALLBACK
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
@@ -26,6 +27,7 @@ from tgbot.handlers.menu import handlers as menu_handlers
 from tgbot.handlers.sale_creation.weight import handlers as weight_handlers
 from tgbot.handlers.sale_creation.region import handlers as region_handlers
 from tgbot.handlers.sale_creation.subregion import handlers as subregion_handlers
+from tgbot.handlers.sale_creation.city import handlers as cities_handlers
 
 from tgbot.main import bot
 
@@ -92,6 +94,17 @@ def setup_dispatcher(dp):
         CallbackQueryHandler(subregion_handlers.callback_subregion_chosen,
                              pattern=f"^{SUBREGION_CHOSEN_CALLBACK}")
     )
+
+    # Handle city selection
+    dp.add_handler(
+        CallbackQueryHandler(cities_handlers.callback_city_choosing,
+                             pattern=f"^{CHOOSE_CITY_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(cities_handlers.callback_city_chosen,
+                             pattern=f"^{CITY_CHOSEN_CALLBACK}")
+    )
+
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
 
