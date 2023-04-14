@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext
 
 from tgbot.handlers.sale_creation.basis import static_text
 from tgbot.handlers.sale_creation.basis.keyboards import make_select_basis_keyboard
+from tgbot.handlers.sale_creation.price.handlers import callback_price_input
 
 
 def callback_basis_input(update: Update, context: CallbackContext) -> None:
@@ -18,7 +19,4 @@ def callback_basis_input(update: Update, context: CallbackContext) -> None:
     elif update.message:
         # User answered
         context.user_data["basis"] = update.message.text
-        context.bot.send_message(
-            update.effective_chat.id,
-            "VSYO"
-        )
+        callback_price_input(update, context)

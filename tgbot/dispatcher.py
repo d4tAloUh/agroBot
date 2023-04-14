@@ -12,6 +12,8 @@ from dtb.settings import DEBUG
 from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
+from tgbot.handlers.sale_creation.price.manage_data import INPUT_PRICE_CALLBACK
+from tgbot.handlers.sale_creation.price.static_text import PRICE_STEP_NAME
 from tgbot.handlers.sale_creation.region.manage_data import REGION_CHOSEN_CALLBACK, CHOOSE_REGION_CALLBACK
 from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_CALLBACK, CHOOSE_SUBREGION_CALLBACK
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
@@ -31,6 +33,7 @@ from tgbot.handlers.sale_creation.region import handlers as region_handlers
 from tgbot.handlers.sale_creation.subregion import handlers as subregion_handlers
 from tgbot.handlers.sale_creation.city import handlers as cities_handlers
 from tgbot.handlers.sale_creation.basis import handlers as basis_handlers
+from tgbot.handlers.sale_creation.price import handlers as price_handlers
 
 from tgbot.main import bot
 
@@ -43,6 +46,9 @@ def setup_type_handler(update: Update, context: CallbackContext) -> None:
             weight_handlers.callback_weight_input(update, context)
             raise DispatcherHandlerStop
         if context.user_data.get("current_step", None) == BASIS_STEP_NAME:
+            basis_handlers.callback_basis_input(update, context)
+            raise DispatcherHandlerStop
+        if context.user_data.get("current_step", None) == PRICE_STEP_NAME:
             basis_handlers.callback_basis_input(update, context)
             raise DispatcherHandlerStop
 
@@ -116,6 +122,12 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(basis_handlers.callback_basis_input,
                              pattern=f"^{INPUT_BASIS_CALLBACK}")
+    )
+
+    # Handle price go back callback
+    dp.add_handler(
+        CallbackQueryHandler(price_handlers.callback_price_input,
+                             pattern=f"^{INPUT_PRICE_CALLBACK}")
     )
 
     # handling errors

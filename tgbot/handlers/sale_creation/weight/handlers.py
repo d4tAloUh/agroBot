@@ -7,7 +7,6 @@ from tgbot.handlers.sale_creation.weight.keyboards import make_select_weight_key
 
 
 def callback_weight_input(update: Update, context: CallbackContext) -> None:
-    print("Callback query in weight:", update.callback_query)
     context.user_data["current_step"] = static_text.WEIGHT_STEP_NAME
 
     # Coming from previous step or next
