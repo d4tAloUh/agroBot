@@ -137,3 +137,8 @@ class SalesPlacement(CreateUpdateTracker):
 
     def __str__(self):
         return f"{self.product} | {self.company}"
+
+    @staticmethod
+    def generate_sale_preview(user_data):
+        print("user_data:", user_data)
+        return "abc\nfdaaf\nasdfwef\n23123"
