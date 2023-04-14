@@ -14,6 +14,7 @@ from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
 from tgbot.handlers.sale_creation.price.manage_data import INPUT_PRICE_CALLBACK
 from tgbot.handlers.sale_creation.price.static_text import PRICE_STEP_NAME
+from tgbot.handlers.sale_creation.price_type.manage_data import CHOOSE_PRICE_TYPE_CALLBACK, CHOSEN_PRICE_TYPE_CALLBACK
 from tgbot.handlers.sale_creation.region.manage_data import REGION_CHOSEN_CALLBACK, CHOOSE_REGION_CALLBACK
 from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_CALLBACK, CHOOSE_SUBREGION_CALLBACK
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
@@ -34,6 +35,7 @@ from tgbot.handlers.sale_creation.subregion import handlers as subregion_handler
 from tgbot.handlers.sale_creation.city import handlers as cities_handlers
 from tgbot.handlers.sale_creation.basis import handlers as basis_handlers
 from tgbot.handlers.sale_creation.price import handlers as price_handlers
+from tgbot.handlers.sale_creation.price_type import handlers as price_type_handlers
 
 from tgbot.main import bot
 
@@ -49,7 +51,7 @@ def setup_type_handler(update: Update, context: CallbackContext) -> None:
             basis_handlers.callback_basis_input(update, context)
             raise DispatcherHandlerStop
         if context.user_data.get("current_step", None) == PRICE_STEP_NAME:
-            basis_handlers.callback_basis_input(update, context)
+            price_handlers.callback_price_input(update, context)
             raise DispatcherHandlerStop
 
 
@@ -118,18 +120,27 @@ def setup_dispatcher(dp):
                              pattern=f"^{CITY_CHOSEN_CALLBACK}")
     )
 
-    # Handle basis go back callback
+    # Handle go back to basis callback
     dp.add_handler(
         CallbackQueryHandler(basis_handlers.callback_basis_input,
                              pattern=f"^{INPUT_BASIS_CALLBACK}")
     )
 
-    # Handle price go back callback
+    # Handle go back to price callback
     dp.add_handler(
         CallbackQueryHandler(price_handlers.callback_price_input,
                              pattern=f"^{INPUT_PRICE_CALLBACK}")
     )
 
+    # Handle price_type selection
+    dp.add_handler(
+        CallbackQueryHandler(price_type_handlers.callback_price_type_choosing,
+                             pattern=f"^{CHOOSE_PRICE_TYPE_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(price_type_handlers.callback_price_type_chosen,
+                             pattern=f"^{CHOSEN_PRICE_TYPE_CALLBACK}")
+    )
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
 
