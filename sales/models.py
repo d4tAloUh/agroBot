@@ -1,7 +1,6 @@
 from django.db import models
 from django.template.loader import get_template
 from django.utils.crypto import get_random_string
-from django.template import Template, Context
 from users.models import TelegramUser
 from utils.models import CreateUpdateTracker, nb
 
@@ -170,13 +169,21 @@ class SalesPlacement(CreateUpdateTracker):
             city_name = City.objects.filter(id=city_id).first().name
 
         basis = user_data.get("basis")
+        weight = user_data.get("weight")
         price = user_data.get("price")
-        currency = user_data.get("currency")
-        price_type = user_data.get("price_type")
-
-        context = Context({
+        try:
+            currency = user_data.get("currency")
+            currency = SalesPlacement.CurrencyChoice[currency.upper()].label
+            price_type = user_data.get("price_type")
+            price_type = SalesPlacement.PriceTypeChoice[price_type.upper()].label
+        except KeyError as e:
+            print(e)
+            currency = None
+            price_type = None
+        context = {
             "company_account": company_account,
             "product_name": product_name,
+            "weight": weight,
             "region_name": region_name,
             "subregion_name": subregion_name,
             "city_name": city_name,
@@ -184,5 +191,5 @@ class SalesPlacement(CreateUpdateTracker):
             "price": price,
             "currency": currency,
             "price_type": price_type,
-        })
+        }
         return template.render(context)

@@ -19,7 +19,7 @@ def make_choose_price_type_keyboard(price_types: Type[models.TextChoices]) -> In
     buttons.append(row)
     buttons.append([
         InlineKeyboardButton(
-            static_text.go_back_to_input_price,
+            static_text.go_back_to_currency,
             callback_data=get_go_back_from_choose_price_type_callback_data()
         )
     ])

@@ -12,6 +12,7 @@ from dtb.settings import DEBUG
 from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
+from tgbot.handlers.sale_creation.currency.manage_data import CHOOSE_CURRENCY_CALLBACK, CHOSEN_CURRENCY_CALLBACK
 from tgbot.handlers.sale_creation.price.manage_data import INPUT_PRICE_CALLBACK
 from tgbot.handlers.sale_creation.price.static_text import PRICE_STEP_NAME
 from tgbot.handlers.sale_creation.price_type.manage_data import CHOOSE_PRICE_TYPE_CALLBACK, CHOSEN_PRICE_TYPE_CALLBACK
@@ -35,6 +36,7 @@ from tgbot.handlers.sale_creation.subregion import handlers as subregion_handler
 from tgbot.handlers.sale_creation.city import handlers as cities_handlers
 from tgbot.handlers.sale_creation.basis import handlers as basis_handlers
 from tgbot.handlers.sale_creation.price import handlers as price_handlers
+from tgbot.handlers.sale_creation.currency import handlers as currency_handlers
 from tgbot.handlers.sale_creation.price_type import handlers as price_type_handlers
 
 from tgbot.main import bot
@@ -130,6 +132,16 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(price_handlers.callback_price_input,
                              pattern=f"^{INPUT_PRICE_CALLBACK}")
+    )
+
+    # Handle currency selection
+    dp.add_handler(
+        CallbackQueryHandler(currency_handlers.callback_currency_choosing,
+                             pattern=f"^{CHOOSE_CURRENCY_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(currency_handlers.callback_currency_chosen,
+                             pattern=f"^{CHOSEN_CURRENCY_CALLBACK}")
     )
 
     # Handle price_type selection
