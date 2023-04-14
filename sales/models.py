@@ -1,6 +1,7 @@
 from django.db import models
+from django.template.loader import get_template
 from django.utils.crypto import get_random_string
-
+from django.template import Template, Context
 from users.models import TelegramUser
 from utils.models import CreateUpdateTracker, nb
 
@@ -97,8 +98,8 @@ class SalesPlacement(CreateUpdateTracker):
         F2 = 'f2', 'Без ПДВ'
 
     class CurrencyChoice(models.TextChoices):
-        UAH = 'uah', 'UAH ₴'
-        USD = 'usd', 'USD $'
+        UAH = 'uah', 'ГРН'
+        USD = 'usd', 'USD'
 
     class StatusChoice(models.TextChoices):
         DRAFT = 'draft', 'DRAFT'
@@ -107,10 +108,10 @@ class SalesPlacement(CreateUpdateTracker):
 
     company = models.ForeignKey(CompanyAccount,
                                 on_delete=models.CASCADE,
-                                related_name="sales",**nb)
+                                related_name="sales", **nb)
     product = models.ForeignKey(Product,
                                 on_delete=models.PROTECT,
-                                related_name="sales",**nb)
+                                related_name="sales", **nb)
     weight = models.IntegerField(**nb)
     basis = models.CharField(max_length=1024, **nb)
     price_type = models.CharField(choices=PriceTypeChoice.choices, max_length=2, **nb)
@@ -122,10 +123,10 @@ class SalesPlacement(CreateUpdateTracker):
                                related_name="sales", **nb)
     subregion = models.ForeignKey(SubRegion,
                                   on_delete=models.PROTECT,
-                                  related_name="sales",**nb)
+                                  related_name="sales", **nb)
     city = models.ForeignKey(City,
                              on_delete=models.PROTECT,
-                             related_name="sales",**nb)
+                             related_name="sales", **nb)
 
     status = models.CharField(choices=StatusChoice.choices,
                               default=StatusChoice.DRAFT,
@@ -139,6 +140,49 @@ class SalesPlacement(CreateUpdateTracker):
         return f"{self.product} | {self.company}"
 
     @staticmethod
-    def generate_sale_preview(user_data):
+    def generate_sale_preview(chat_id, user_data):
+        template = get_template('sale_preview.html')
+
         print("user_data:", user_data)
-        return "abc\nfdaaf\nasdfwef\n23123"
+        print("chat_id:", chat_id)
+        company_account = CompanyAccount.objects.filter(
+            tg_user_id=chat_id
+        ).first()
+        product_name = None
+        region_name = None
+        subregion_name = None
+        city_name = None
+
+        product_id = user_data.get("product_id")
+        if product_id:
+            product_name = Product.objects.filter(id=product_id).first().name
+
+        region_id = user_data.get("region_id")
+        if region_id:
+            region_name = Region.objects.filter(id=region_id).first().name
+
+        subregion_id = user_data.get("subregion_id")
+        if region_id:
+            subregion_name = SubRegion.objects.filter(id=subregion_id).first().name
+
+        city_id = user_data.get("city_id")
+        if city_id:
+            city_name = City.objects.filter(id=city_id).first().name
+
+        basis = user_data.get("basis")
+        price = user_data.get("price")
+        currency = user_data.get("currency")
+        price_type = user_data.get("price_type")
+
+        context = Context({
+            "company_account": company_account,
+            "product_name": product_name,
+            "region_name": region_name,
+            "subregion_name": subregion_name,
+            "city_name": city_name,
+            "basis": basis,
+            "price": price,
+            "currency": currency,
+            "price_type": price_type,
+        })
+        return template.render(context)
