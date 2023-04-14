@@ -9,6 +9,8 @@ from telegram.ext import (
 )
 
 from dtb.settings import DEBUG
+from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
+from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
 from tgbot.handlers.sale_creation.region.manage_data import REGION_CHOSEN_CALLBACK, CHOOSE_REGION_CALLBACK
 from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_CALLBACK, CHOOSE_SUBREGION_CALLBACK
@@ -28,6 +30,7 @@ from tgbot.handlers.sale_creation.weight import handlers as weight_handlers
 from tgbot.handlers.sale_creation.region import handlers as region_handlers
 from tgbot.handlers.sale_creation.subregion import handlers as subregion_handlers
 from tgbot.handlers.sale_creation.city import handlers as cities_handlers
+from tgbot.handlers.sale_creation.basis import handlers as basis_handlers
 
 from tgbot.main import bot
 
@@ -35,9 +38,13 @@ from tgbot.main import bot
 def setup_type_handler(update: Update, context: CallbackContext) -> None:
     # print("user data:", context.user_data)
     # print("Update query", update.callback_query)
-    if update.message and context.user_data.get("current_step", None) == WEIGHT_STEP_NAME:
-        weight_handlers.callback_weight_input(update, context)
-        raise DispatcherHandlerStop
+    if update.message:
+        if context.user_data.get("current_step", None) == WEIGHT_STEP_NAME:
+            weight_handlers.callback_weight_input(update, context)
+            raise DispatcherHandlerStop
+        if context.user_data.get("current_step", None) == BASIS_STEP_NAME:
+            basis_handlers.callback_basis_input(update, context)
+            raise DispatcherHandlerStop
 
 
 def setup_dispatcher(dp):
@@ -103,6 +110,12 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(cities_handlers.callback_city_chosen,
                              pattern=f"^{CITY_CHOSEN_CALLBACK}")
+    )
+
+    # Handle basis go back callback
+    dp.add_handler(
+        CallbackQueryHandler(basis_handlers.callback_basis_input,
+                             pattern=f"^{INPUT_BASIS_CALLBACK}")
     )
 
     # handling errors
