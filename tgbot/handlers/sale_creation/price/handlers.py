@@ -4,12 +4,11 @@ from telegram.ext import CallbackContext
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.price import static_text
 from tgbot.handlers.sale_creation.price.keyboards import make_input_price_keyboard
+from tgbot.handlers.sale_creation.price_type.handlers import callback_price_type_choosing
 
 
 def callback_price_input(update: Update, context: CallbackContext) -> None:
     keyboard = make_input_price_keyboard()
-    print("got message:", update.message)
-    print("status:", context.user_data)
     # Coming from previous step or next
     if update.callback_query:
         context.user_data["current_step"] = static_text.PRICE_STEP_NAME
@@ -19,7 +18,6 @@ def callback_price_input(update: Update, context: CallbackContext) -> None:
         )
     elif update.message and context.user_data.get("current_step") == BASIS_STEP_NAME:
         context.user_data["current_step"] = static_text.PRICE_STEP_NAME
-        print("Updated user data:", context.user_data)
         # Coming from previous input step
         context.bot.send_message(
             update.effective_chat.id,
@@ -29,7 +27,4 @@ def callback_price_input(update: Update, context: CallbackContext) -> None:
     elif update.message:
         # User answered
         context.user_data["price"] = update.message.text
-        context.bot.send_message(
-            update.effective_chat.id,
-            "VSYO"
-        )
+        callback_price_type_choosing(update, context)
