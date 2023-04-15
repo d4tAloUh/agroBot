@@ -17,18 +17,18 @@ def make_paginated_keyboard(**kwargs) -> InlineKeyboardMarkup:
     markup = []
     row_markup = []
     # Add prev/next buttons
-    if not is_last_page:
-        row_markup.append(
-            InlineKeyboardButton(
-                text=static_text.next_page_text,
-                callback_data=next_page_callback
-            )
-        )
     if page != 1:
         row_markup.append(
             InlineKeyboardButton(
                 text=static_text.prev_page_text,
                 callback_data=prev_page_callback
+            )
+        )
+    if not is_last_page:
+        row_markup.append(
+            InlineKeyboardButton(
+                text=static_text.next_page_text,
+                callback_data=next_page_callback
             )
         )
     markup.append(row_markup)

@@ -36,9 +36,10 @@ class CompanyAccount(CreateUpdateTracker):
 
 class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
+    order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['name']
+        ordering = ['order']
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
 
@@ -157,7 +158,6 @@ class SalesPlacement(CreateUpdateTracker):
     def generate_sale_preview_text(self):
         template = get_template('sale_preview.html')
         context = self.get_context_for_sale()
-        print(context)
         return template.render(context)
     
     @staticmethod

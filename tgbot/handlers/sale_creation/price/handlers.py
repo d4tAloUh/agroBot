@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
-from tgbot.handlers.sale_creation.currency.handlers import callback_currency_choosing
+from tgbot.handlers.sale_creation.create_sale.handlers import callback_create_sales_preview
 from tgbot.handlers.sale_creation.price import static_text
 from tgbot.handlers.sale_creation.price.keyboards import make_input_price_keyboard
 
@@ -27,4 +27,4 @@ def callback_price_input(update: Update, context: CallbackContext) -> None:
     elif update.message:
         # User answered
         context.user_data["price"] = update.message.text
-        callback_currency_choosing(update, context)
+        callback_create_sales_preview(update, context)
