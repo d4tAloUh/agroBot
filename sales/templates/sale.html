@@ -1,4 +1,6 @@
 <b>Заявка на продаж #{% if sale.pk %}{{ sale.pk }}{% else %}---{% endif %}</b>
+
+
 {% if sale.product %}{{ sale.product }}{% else %}Не знайдено такого товару, перестворіть оголошення{% endif %}
 {% if sale.weight %}{{ sale.weight }} МТ{% else %}Не введено тоннаж, перестворіть оголошення{% endif %}
 {% if sale.region and sale.subregion %}{{ sale.region.name }} обл., {{sale.subregion.name}} рн., {% if sale.city %}{{sale.city.name}}{% endif %}{% else %}Не обрано регіон, перестворіть оголошення{% endif %}

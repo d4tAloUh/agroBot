@@ -94,8 +94,12 @@ class City(CreateUpdateTracker):
 
 class SalesPlacement(CreateUpdateTracker):
     class PriceTypeChoice(models.TextChoices):
-        F1 = 'f1', 'З ПДВ'
-        F2 = 'f2', 'Без ПДВ'
+        F1 = 'f1', 'Ф1'
+        F2 = 'f2', 'Ф2'
+
+    class VATChoice(models.TextChoices):
+        WITH = 'with', 'З ПДВ'
+        WITHOUT = 'without', 'БЕЗ ПДВ'
 
     class CurrencyChoice(models.TextChoices):
         UAH = 'uah', 'ГРН'
@@ -121,6 +125,7 @@ class SalesPlacement(CreateUpdateTracker):
     weight = models.IntegerField(**nb)
     basis = models.CharField(max_length=1024, **nb)
     price_type = models.CharField(choices=PriceTypeChoice.choices, max_length=2, **nb)
+    vat = models.CharField(choices=VATChoice.choices, max_length=7, **nb)
     currency = models.CharField(choices=CurrencyChoice.choices, max_length=3, **nb)
     price = models.CharField(**nb)
 

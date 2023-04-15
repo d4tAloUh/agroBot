@@ -5,6 +5,7 @@ from sales.models import SalesPlacement
 from tgbot.handlers.sale_creation.create_sale.handlers import callback_create_sales_preview
 from tgbot.handlers.sale_creation.price.handlers import callback_price_input
 from tgbot.handlers.sale_creation.price_type.keyboards import make_choose_price_type_keyboard
+from tgbot.handlers.sale_creation.vat.handlers import callback_vat_choosing
 from tgbot.handlers.utils.helpers import extract_string
 
 from tgbot.handlers.sale_creation.price_type import static_text
@@ -12,10 +13,12 @@ from tgbot.handlers.sale_creation.price_type import static_text
 
 def callback_price_type_chosen(update: Update, context: CallbackContext) -> None:
     price_type_string = extract_string(update.callback_query.data)
-    # Save selected product id
     context.user_data["price_type"] = price_type_string
     # Call next step
-    callback_price_input(update, context)
+    if price_type_string == SalesPlacement.PriceTypeChoice.F1.value:
+        callback_vat_choosing(update, context)
+    else:
+        callback_price_input(update, context)
 
 
 def callback_price_type_choosing(update: Update, context: CallbackContext) -> None:

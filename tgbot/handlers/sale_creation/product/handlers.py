@@ -21,7 +21,8 @@ def callback_product_chosen(update: Update, context: CallbackContext) -> None:
 
 def callback_product_choosing(update: Update, context: CallbackContext) -> None:
     context.user_data["current_step"] = static_text.PRODUCT_STEP_NAME
-    products = Product.objects.all()
+    products = Product.objects.order_by('order')
+    print(products.all())
     page = extract_page(update.callback_query.data)
     paginator = Paginator(
         object_list=products,

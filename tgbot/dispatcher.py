@@ -19,6 +19,7 @@ from tgbot.handlers.sale_creation.price.static_text import PRICE_STEP_NAME
 from tgbot.handlers.sale_creation.price_type.manage_data import CHOOSE_PRICE_TYPE_CALLBACK, CHOSEN_PRICE_TYPE_CALLBACK
 from tgbot.handlers.sale_creation.region.manage_data import REGION_CHOSEN_CALLBACK, CHOOSE_REGION_CALLBACK
 from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_CALLBACK, CHOOSE_SUBREGION_CALLBACK
+from tgbot.handlers.sale_creation.vat.manage_data import CHOOSE_VAT_CALLBACK, CHOSEN_VAT_CALLBACK
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
 from tgbot.handlers.sale_creation.weight.static_text import WEIGHT_STEP_NAME
 
@@ -39,6 +40,7 @@ from tgbot.handlers.sale_creation.basis import handlers as basis_handlers
 from tgbot.handlers.sale_creation.price import handlers as price_handlers
 from tgbot.handlers.sale_creation.currency import handlers as currency_handlers
 from tgbot.handlers.sale_creation.price_type import handlers as price_type_handlers
+from tgbot.handlers.sale_creation.vat import handlers as vat_handlers
 from tgbot.handlers.sale_creation.create_sale import handlers as sale_creation_handlers
 
 from tgbot.main import bot
@@ -154,6 +156,16 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(price_type_handlers.callback_price_type_chosen,
                              pattern=f"^{CHOSEN_PRICE_TYPE_CALLBACK}")
+    )
+
+    # Handle vat selection
+    dp.add_handler(
+        CallbackQueryHandler(vat_handlers.callback_vat_choosing,
+                             pattern=f"^{CHOOSE_VAT_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(vat_handlers.callback_vat_chosen,
+                             pattern=f"^{CHOSEN_VAT_CALLBACK}")
     )
 
     # Handle sale creation confirmation
