@@ -1,13 +1,13 @@
-<b>Заявка на продаж № ---</b>
-{% if product_name %}{{ product_name }}{% else %}Не знайдено такого товару, перестворіть оголошення{% endif %}
-{% if weight %}{{ weight }} МТ{% else %}Не введено тоннаж, перестворіть оголошення{% endif %}
-{% if region_name and subregion_name %}{{ region_name }} обл., {{subregion_name}} рн., {{city_name}}{% else %}Не обрано регіон, перестворіть оголошення{% endif %}
-{% if basis %}{{ basis}}{% else %}Не обрано Базис, перестворіть оголошення{% endif %}
-{% if price and currency and price_type %}{{ price }}, {{ currency }} ({{ price_type }}){% else %}Неправильно введено ціну, перестворіть оголошення{% endif %}
-{% if company_account %}
-{{ company_account.tov }}
-{{ company_account.id }}
-{{ company_account.name }}
+<b>Заявка на продаж #{% if sale.pk %}{{ sale.pk }}{% else %}---{% endif %}</b>
+{% if sale.product %}{{ sale.product }}{% else %}Не знайдено такого товару, перестворіть оголошення{% endif %}
+{% if sale.weight %}{{ sale.weight }} МТ{% else %}Не введено тоннаж, перестворіть оголошення{% endif %}
+{% if sale.region and sale.subregion %}{{ sale.region.name }} обл., {{sale.subregion.name}} рн., {% if sale.city %}{{sale.city.name}}{% endif %}{% else %}Не обрано регіон, перестворіть оголошення{% endif %}
+{% if sale.basis %}{{ sale.basis }}{% else %}Не обрано Базис, перестворіть оголошення{% endif %}
+{% if sale.price and sale.currency and sale.price_type %}{{ sale.price }}, {{ sale.currency }} ({{ sale.price_type }}){% else %}Неправильно введено ціну, перестворіть оголошення{% endif %}
+{% if sale.company %}
+{{ sale.company.tov }}
+{{ sale.company.id }}
+{{ sale.company.name }}
 {% else %}
 Ви не зарєстровані
 {% endif %}

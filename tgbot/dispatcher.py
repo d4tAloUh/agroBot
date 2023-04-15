@@ -12,6 +12,7 @@ from dtb.settings import DEBUG
 from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
+from tgbot.handlers.sale_creation.create_sale.manage_data import ACCEPT_SALE_CALLBACK
 from tgbot.handlers.sale_creation.currency.manage_data import CHOOSE_CURRENCY_CALLBACK, CHOSEN_CURRENCY_CALLBACK
 from tgbot.handlers.sale_creation.price.manage_data import INPUT_PRICE_CALLBACK
 from tgbot.handlers.sale_creation.price.static_text import PRICE_STEP_NAME
@@ -38,6 +39,7 @@ from tgbot.handlers.sale_creation.basis import handlers as basis_handlers
 from tgbot.handlers.sale_creation.price import handlers as price_handlers
 from tgbot.handlers.sale_creation.currency import handlers as currency_handlers
 from tgbot.handlers.sale_creation.price_type import handlers as price_type_handlers
+from tgbot.handlers.sale_creation.create_sale import handlers as sale_creation_handlers
 
 from tgbot.main import bot
 
@@ -152,6 +154,12 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(price_type_handlers.callback_price_type_chosen,
                              pattern=f"^{CHOSEN_PRICE_TYPE_CALLBACK}")
+    )
+
+    # Handle sale creation confirmation
+    dp.add_handler(
+        CallbackQueryHandler(sale_creation_handlers.callback_confirm_sale_creation,
+                             pattern=f"^{ACCEPT_SALE_CALLBACK}")
     )
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)

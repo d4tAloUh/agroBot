@@ -105,6 +105,12 @@ class SalesPlacement(CreateUpdateTracker):
         POSTED = 'posted', 'POSTED'
         DELETED = 'deleted', 'DELETED'
 
+    USER_DATA_SALE_FIELDS = [
+        'product_id', 'region_id', 'subregion_id',
+        'city_id', 'basis', 'weight', 'price',
+        'currency', 'price_type'
+    ]
+
     company = models.ForeignKey(CompanyAccount,
                                 on_delete=models.CASCADE,
                                 related_name="sales", **nb)
@@ -137,59 +143,49 @@ class SalesPlacement(CreateUpdateTracker):
 
     def __str__(self):
         return f"{self.product} | {self.company}"
+    
+    def get_context_for_sale(self):
+        return {
+            "sale": self
+        }
+    
+    def generate_sale_text(self):
+        template = get_template('sale.html')
+        context = self.get_context_for_sale()
+        return template.render(context)
 
-    @staticmethod
-    def generate_sale_preview(chat_id, user_data):
+    def generate_sale_preview_text(self):
         template = get_template('sale_preview.html')
-
-        print("user_data:", user_data)
-        print("chat_id:", chat_id)
+        context = self.get_context_for_sale()
+        print(context)
+        return template.render(context)
+    
+    @staticmethod
+    def create_unsaved_sale_from_user_data(chat_id, user_data):
         company_account = CompanyAccount.objects.filter(
             tg_user_id=chat_id
         ).first()
-        product_name = None
-        region_name = None
-        subregion_name = None
-        city_name = None
-
         product_id = user_data.get("product_id")
-        if product_id:
-            product_name = Product.objects.filter(id=product_id).first().name
-
         region_id = user_data.get("region_id")
-        if region_id:
-            region_name = Region.objects.filter(id=region_id).first().name
-
         subregion_id = user_data.get("subregion_id")
-        if region_id:
-            subregion_name = SubRegion.objects.filter(id=subregion_id).first().name
-
         city_id = user_data.get("city_id")
-        if city_id:
-            city_name = City.objects.filter(id=city_id).first().name
-
         basis = user_data.get("basis")
         weight = user_data.get("weight")
         price = user_data.get("price")
-        try:
-            currency = user_data.get("currency")
-            currency = SalesPlacement.CurrencyChoice[currency.upper()].label
-            price_type = user_data.get("price_type")
-            price_type = SalesPlacement.PriceTypeChoice[price_type.upper()].label
-        except KeyError as e:
-            print(e)
-            currency = None
-            price_type = None
-        context = {
-            "company_account": company_account,
-            "product_name": product_name,
-            "weight": weight,
-            "region_name": region_name,
-            "subregion_name": subregion_name,
-            "city_name": city_name,
-            "basis": basis,
-            "price": price,
-            "currency": currency,
-            "price_type": price_type,
-        }
-        return template.render(context)
+        currency = user_data.get("currency")
+        price_type = user_data.get("price_type")
+
+        sale = SalesPlacement(
+            company=company_account,
+            product_id=product_id,
+            weight=weight,
+            basis=basis,
+            price_type=price_type,
+            currency=currency,
+            price=price,
+            region_id=region_id,
+            subregion_id=subregion_id,
+            city_id=city_id,
+            status=SalesPlacement.StatusChoice.POSTED.value
+        )
+        return sale
