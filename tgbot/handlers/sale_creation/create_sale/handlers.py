@@ -11,6 +11,7 @@ def callback_confirm_sale_creation(update: Update, context: CallbackContext) -> 
         update.effective_chat.id,
         context.user_data
     )
+    print(context.user_data)
     sale.save()
     sale_text = sale.generate_sale_text()
     keyboard = create_new_sale_keyboard()

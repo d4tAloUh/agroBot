@@ -179,6 +179,7 @@ class SalesPlacement(CreateUpdateTracker):
         price = user_data.get("price")
         currency = user_data.get("currency")
         price_type = user_data.get("price_type")
+        vat = user_data.get("vat")
 
         sale = SalesPlacement(
             company=company_account,
@@ -191,6 +192,7 @@ class SalesPlacement(CreateUpdateTracker):
             region_id=region_id,
             subregion_id=subregion_id,
             city_id=city_id,
+            vat=vat,
             status=SalesPlacement.StatusChoice.POSTED.value
         )
         return sale

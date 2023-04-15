@@ -10,9 +10,9 @@ from tgbot.handlers.sale_creation.vat import static_text
 
 
 def callback_vat_chosen(update: Update, context: CallbackContext) -> None:
-    price_type_string = extract_string(update.callback_query.data)
+    vat = extract_string(update.callback_query.data)
     # Save selected product id
-    context.user_data["price_type"] = price_type_string
+    context.user_data["vat"] = vat
     # Call next step
     callback_price_input(update, context)
 
