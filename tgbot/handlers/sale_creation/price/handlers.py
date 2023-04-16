@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, Message
 from telegram.ext import CallbackContext
 
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
@@ -19,11 +19,12 @@ def callback_price_input(update: Update, context: CallbackContext) -> None:
     elif update.message and context.user_data.get("current_step") == BASIS_STEP_NAME:
         context.user_data["current_step"] = static_text.PRICE_STEP_NAME
         # Coming from previous input step
-        context.bot.send_message(
+        message: Message = context.bot.send_message(
             update.effective_chat.id,
             static_text.input_price_text,
             reply_markup=keyboard
         )
+        context.user_data["last_message_with_inline"] = message.message_id
     elif update.message:
         # User answered
         context.user_data["price"] = update.message.text

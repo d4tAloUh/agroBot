@@ -34,3 +34,7 @@ def extract_id_with_value(callback_text:str):
         selected_id = int(split_text[2])
         selected_value = split_text[3] == 'True'
     return selected_id, selected_value
+
+
+def delete_inline_keyboard_on_message(message_id):
+    pass

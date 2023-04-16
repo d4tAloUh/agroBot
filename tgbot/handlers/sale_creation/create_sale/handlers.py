@@ -1,4 +1,4 @@
-from telegram import Update, ParseMode
+from telegram import Update, ParseMode, Message
 from telegram.ext import CallbackContext
 
 from sales.models import SalePlacement, CompanyAccount
@@ -32,10 +32,11 @@ def callback_create_sales_preview(update: Update, context: CallbackContext) -> N
         context.user_data
     )
     sale_text = sale.generate_sale_preview_text()
-    context.bot.send_message(
+    message: Message = context.bot.send_message(
         update.effective_chat.id,
         sale_text,
         reply_markup=keyboard,
         parse_mode=ParseMode.HTML
     )
+    context.user_data["last_message_with_inline"] = message.message_id
 

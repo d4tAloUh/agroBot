@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from telegram import Update
+from telegram import Update, Message
 from telegram.ext import CallbackContext
 
 from sales.models import Region
@@ -52,8 +52,9 @@ def callback_region_choosing(update: Update, context: CallbackContext) -> None:
             reply_markup=keyboard
         )
     else:
-        context.bot.send_message(
+        message: Message = context.bot.send_message(
             update.effective_chat.id,
             static_text.choose_region_text,
             reply_markup=keyboard
         )
+        context.user_data["last_message_with_inline"] = message.message_id
