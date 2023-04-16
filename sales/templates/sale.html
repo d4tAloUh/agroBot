@@ -10,7 +10,7 @@
 🏢  {{ sale.company.tov }}
 🆔  {{ sale.company.id }}
 👨‍💼  {{ sale.company.name }}
-☎️  {{ sale.company.phone }}
+☎️  <a href="tel:{{ sale.company.phone }}">{{ sale.company.phone }}</a>
 {% else %}
 Ви не зарєстровані
 {% endif %}

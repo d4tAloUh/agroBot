@@ -1,4 +1,5 @@
-create_new_sale_text = "Створити нове оголошення"
+create_new_sale_text = "Продати"
+my_sales_text = "Мої продажі"
 unregistered_text = "Ви не зарєстровані."
 greeting_text = "Чим можу допомогти?"
 successfully_linked = "Вітаю, {account_name}, ви успішно підʼєднали свій аккаунт."

@@ -2,9 +2,9 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from sales.models import CompanyAccount
+from tgbot.handlers.menu.keyboards import make_menu_keyboard
 from tgbot.handlers.onboarding import static_text
 from users.models import TelegramUser
-from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_registered_user
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
@@ -22,11 +22,11 @@ def command_start(update: Update, context: CallbackContext) -> None:
             company_account.tg_user = u
             company_account.save()
             text = static_text.successfully_linked.format(account_name=company_account.name)
-            keyboard = make_keyboard_for_start_registered_user()
+            keyboard = make_menu_keyboard()
     if text is None:
         if u.is_registered:
             text = static_text.greeting_text
-            keyboard = make_keyboard_for_start_registered_user()
+            keyboard = make_menu_keyboard()
         else:
             text = static_text.unregistered_text
 
