@@ -1,3 +1,4 @@
+import telegram
 from telegram import Update
 from telegram.ext import CallbackContext
 
@@ -24,9 +25,11 @@ def callback_sale_detail(update: Update, context: CallbackContext) -> None:
     ).select_related('product').first()
     if not sale:
         callback_sales_choosing(update, context)
-    keyboard = make_sale_detail_keyboard(sale_id=sale_id)
+    sales_page = context.user_data.get("sales_page", 1)
+    keyboard = make_sale_detail_keyboard(sale_id=sale_id,sales_page=sales_page)
     message_text = sale.generate_sale_text()
     update.callback_query.edit_message_text(
         message_text,
-        reply_markup=keyboard
+        reply_markup=keyboard,
+        parse_mode=telegram.ParseMode.HTML
     )

@@ -25,6 +25,7 @@ def callback_sales_choosing(update: Update, context: CallbackContext) -> None:
         company__tg_user_id=update.effective_chat.id
     ).select_related('product').order_by('-created_at')
     page = extract_page(update.callback_query.data)
+    context.user_data["sales_page"] = page
     paginator = Paginator(
         object_list=sales,
         per_page=static_text.sales_per_row * static_text.sale_rows
