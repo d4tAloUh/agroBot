@@ -49,7 +49,7 @@ def delete_inline_keyboard_on_previous_inline_message(update: Update, context: C
             message_id=message_id,
             reply_markup=None
         )
-    except Exception as e:
-        print(e)
+    except Exception:
+        pass
 
 
