@@ -5,6 +5,7 @@ from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.create_sale.handlers import callback_create_sales_preview
 from tgbot.handlers.sale_creation.price import static_text
 from tgbot.handlers.sale_creation.price.keyboards import make_input_price_keyboard
+from tgbot.handlers.utils.helpers import delete_inline_keyboard_on_previous_inline_message
 
 
 def callback_price_input(update: Update, context: CallbackContext) -> None:
@@ -23,6 +24,9 @@ def callback_price_input(update: Update, context: CallbackContext) -> None:
             update.effective_chat.id,
             static_text.input_price_text,
             reply_markup=keyboard
+        )
+        delete_inline_keyboard_on_previous_inline_message(
+            update, context
         )
         context.user_data["last_message_with_inline"] = message.message_id
     elif update.message:

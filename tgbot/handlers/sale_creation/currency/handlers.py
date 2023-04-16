@@ -4,7 +4,7 @@ from telegram.ext import CallbackContext
 from sales.models import SalePlacement
 from tgbot.handlers.sale_creation.currency.keyboards import make_choose_currency_keyboard
 from tgbot.handlers.sale_creation.price_type.handlers import callback_price_type_choosing
-from tgbot.handlers.utils.helpers import extract_string
+from tgbot.handlers.utils.helpers import extract_string, delete_inline_keyboard_on_previous_inline_message
 
 from tgbot.handlers.sale_creation.currency import static_text
 
@@ -34,5 +34,8 @@ def callback_currency_choosing(update: Update, context: CallbackContext) -> None
             update.effective_chat.id,
             static_text.choose_currency_text,
             reply_markup=keyboard
+        )
+        delete_inline_keyboard_on_previous_inline_message(
+            update, context
         )
         context.user_data["last_message_with_inline"] = message.message_id

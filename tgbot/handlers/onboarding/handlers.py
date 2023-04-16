@@ -1,4 +1,4 @@
-from telegram import Update
+from telegram import Update, Message
 from telegram.ext import CallbackContext
 
 from sales.models import CompanyAccount
@@ -30,4 +30,5 @@ def command_start(update: Update, context: CallbackContext) -> None:
         else:
             text = static_text.unregistered_text
 
-    update.message.reply_text(text=text, reply_markup=keyboard)
+    message: Message = update.message.reply_text(text=text, reply_markup=keyboard)
+    context.user_data["last_message_with_inline"] = message.message_id

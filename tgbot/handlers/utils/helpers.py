@@ -1,5 +1,8 @@
 from typing import Dict
 
+from telegram import Update
+from telegram.ext import CallbackContext
+
 from tgbot.handlers.utils import static_text
 
 
@@ -36,5 +39,17 @@ def extract_id_with_value(callback_text:str):
     return selected_id, selected_value
 
 
-def delete_inline_keyboard_on_message(message_id):
-    pass
+def delete_inline_keyboard_on_previous_inline_message(update: Update, context: CallbackContext):
+    message_id = context.user_data.get("last_message_with_inline")
+    if not message_id:
+        return
+    try:
+        context.bot.edit_message_reply_markup(
+            update.effective_chat.id,
+            message_id=message_id,
+            reply_markup=None
+        )
+    except Exception as e:
+        print(e)
+
+

@@ -5,6 +5,7 @@ from sales.models import SalePlacement, CompanyAccount
 from tgbot.handlers.menu.handlers import callback_menu
 from tgbot.handlers.sale_creation.create_sale.keyboards import make_sales_preview_keyboard, create_new_sale_keyboard
 from tgbot.handlers.sale_creation.create_sale import static_text
+from tgbot.handlers.utils.helpers import delete_inline_keyboard_on_previous_inline_message
 
 
 def callback_confirm_sale_creation(update: Update, context: CallbackContext) -> None:
@@ -37,6 +38,9 @@ def callback_create_sales_preview(update: Update, context: CallbackContext) -> N
         sale_text,
         reply_markup=keyboard,
         parse_mode=ParseMode.HTML
+    )
+    delete_inline_keyboard_on_previous_inline_message(
+        update, context
     )
     context.user_data["last_message_with_inline"] = message.message_id
 

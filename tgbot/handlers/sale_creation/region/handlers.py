@@ -8,7 +8,7 @@ from tgbot.handlers.sale_creation.region.utils import get_region_chosen_callback
     get_go_back_from_choose_region_callback_data
 from tgbot.handlers.sale_creation.subregion.handlers import callback_subregion_choosing
 from tgbot.handlers.sale_creation.subregion.utils import get_choose_subregion_callback_data
-from tgbot.handlers.utils.helpers import extract_page, extract_id
+from tgbot.handlers.utils.helpers import extract_page, extract_id, delete_inline_keyboard_on_previous_inline_message
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
 
@@ -56,5 +56,8 @@ def callback_region_choosing(update: Update, context: CallbackContext) -> None:
             update.effective_chat.id,
             static_text.choose_region_text,
             reply_markup=keyboard
+        )
+        delete_inline_keyboard_on_previous_inline_message(
+            update, context
         )
         context.user_data["last_message_with_inline"] = message.message_id
