@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from sales.models import SalesPlacement
+from sales.models import SalePlacement
 from tgbot.handlers.sale_creation.currency.keyboards import make_choose_currency_keyboard
 from tgbot.handlers.sale_creation.price_type.handlers import callback_price_type_choosing
 from tgbot.handlers.utils.helpers import extract_string
@@ -21,7 +21,7 @@ def callback_currency_choosing(update: Update, context: CallbackContext) -> None
     context.user_data["current_step"] = static_text.CURRENCY_STEP_NAME
 
     keyboard = make_choose_currency_keyboard(
-        SalesPlacement.CurrencyChoice
+        SalePlacement.CurrencyChoice
     )
     if update.callback_query:
         update.callback_query.edit_message_text(

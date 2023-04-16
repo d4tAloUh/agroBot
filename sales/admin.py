@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalesPlacement
+from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalePlacement, SaleInterest
 from dtb.settings import TELEGRAM_BOT_USERNAME
 
 
@@ -9,7 +9,7 @@ from dtb.settings import TELEGRAM_BOT_USERNAME
 class CompanyAccountAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'tov', 'name', 'phone',
-        'account_link_url', 'is_registered'
+        'account_link_url', 'is_linked'
     ]
     search_fields = ('name', 'tov', 'phone')
 
@@ -20,11 +20,11 @@ class CompanyAccountAdmin(admin.ModelAdmin):
 
     account_link_url.short_description = 'Invite link'
 
-    def is_registered(self, obj: CompanyAccount):
-        return obj.is_registered
+    def is_linked(self, obj: CompanyAccount):
+        return obj.is_linked
 
-    is_registered.short_description = 'Is registered'
-    is_registered.boolean = True
+    is_linked.short_description = 'Is linked'
+    is_linked.boolean = True
 
 
 @admin.register(Product)
@@ -70,10 +70,11 @@ class CityAdmin(admin.ModelAdmin):
         return obj.subregion.name
 
 
-@admin.register(SalesPlacement)
+@admin.register(SalePlacement)
 class SalesPlacementAdmin(admin.ModelAdmin):
     list_display = [
         'id',
+        'status',
         'company_tov',
         'product_name',
     ]
@@ -82,14 +83,26 @@ class SalesPlacementAdmin(admin.ModelAdmin):
                      'basis',
                      'product__name', 'product__id')
 
-    def company_tov(self, obj: SalesPlacement):
+    def company_tov(self, obj: SalePlacement):
         return obj.company.tov
 
     company_tov.admin_order_field = 'company'
     company_tov.short_description = 'ТОВ'
 
-    def product_name(self, obj: SalesPlacement):
+    def product_name(self, obj: SalePlacement):
         return obj.product.name
 
     product_name.admin_order_field = 'product'
     product_name.short_description = 'Товар'
+
+
+@admin.register(SaleInterest)
+class SaleInterestAdmin(admin.ModelAdmin):
+    list_display = [
+        'company', 'product',
+    ]
+    search_fields = ('name',)
+
+    def product(self, obj: SaleInterest):
+        return obj.product.name
+

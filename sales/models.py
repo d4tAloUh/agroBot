@@ -34,7 +34,7 @@ class CompanyAccount(CreateUpdateTracker):
         super().save(*args, **kwargs)
 
     @property
-    def is_registered(self) -> bool:
+    def is_linked(self) -> bool:
         return bool(self.tg_user_id)
 
 
@@ -96,7 +96,7 @@ class City(CreateUpdateTracker):
         return self.name
 
 
-class SalesPlacement(CreateUpdateTracker):
+class SalePlacement(CreateUpdateTracker):
     class PriceTypeChoice(models.TextChoices):
         F1 = 'f1', 'Ф1'
         F2 = 'f2', 'Ф2'
@@ -110,9 +110,9 @@ class SalesPlacement(CreateUpdateTracker):
         USD = 'usd', 'USD'
 
     class StatusChoice(models.TextChoices):
-        DRAFT = 'draft', 'DRAFT'
-        POSTED = 'posted', 'POSTED'
-        DELETED = 'deleted', 'DELETED'
+        DRAFT = 'draft', 'Draft'
+        POSTED = 'posted', 'Posted'
+        DELETED = 'deleted', 'Deleted'
 
     USER_DATA_SALE_FIELDS = [
         'product_id', 'region_id', 'subregion_id',
@@ -156,9 +156,7 @@ class SalesPlacement(CreateUpdateTracker):
         return f"{self.product} | {self.company}"
 
     def get_context_for_sale(self):
-        return {
-            "sale": self
-        }
+        return {"sale": self}
 
     def generate_sale_text(self):
         template = get_template('sale.html')
@@ -186,7 +184,7 @@ class SalesPlacement(CreateUpdateTracker):
         price_type = user_data.get("price_type")
         vat = user_data.get("vat")
 
-        sale = SalesPlacement(
+        sale = SalePlacement(
             company=company_account,
             product_id=product_id,
             weight=weight,
@@ -198,6 +196,20 @@ class SalesPlacement(CreateUpdateTracker):
             subregion_id=subregion_id,
             city_id=city_id,
             vat=vat,
-            status=SalesPlacement.StatusChoice.POSTED.value
+            status=SalePlacement.StatusChoice.POSTED.value
         )
         return sale
+
+
+class SaleInterest(CreateUpdateTracker):
+    company = models.ForeignKey(CompanyAccount,
+                                on_delete=models.CASCADE,
+                                related_name="sale_interests")
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name="sale_interests")
+
+    class Meta:
+        verbose_name = 'Sale Interest'
+        verbose_name_plural = 'Sale Interests'
+        unique_together = ['company', 'product']

@@ -1,13 +1,13 @@
 from telegram import Update, ParseMode
 from telegram.ext import CallbackContext
 
-from sales.models import SalesPlacement, CompanyAccount
+from sales.models import SalePlacement, CompanyAccount
 from tgbot.handlers.sale_creation.create_sale.keyboards import make_sales_preview_keyboard, create_new_sale_keyboard
 from tgbot.handlers.sale_creation.create_sale import static_text
 
 
 def callback_confirm_sale_creation(update: Update, context: CallbackContext) -> None:
-    sale = SalesPlacement.create_unsaved_sale_from_user_data(
+    sale = SalePlacement.create_unsaved_sale_from_user_data(
         update.effective_chat.id,
         context.user_data
     )
@@ -26,7 +26,7 @@ def callback_confirm_sale_creation(update: Update, context: CallbackContext) -> 
 def callback_create_sales_preview(update: Update, context: CallbackContext) -> None:
     context.user_data["current_step"] = static_text.SALE_PREVIEW_STEP
     keyboard = make_sales_preview_keyboard()
-    sale = SalesPlacement.create_unsaved_sale_from_user_data(
+    sale = SalePlacement.create_unsaved_sale_from_user_data(
         update.effective_chat.id,
         context.user_data
     )

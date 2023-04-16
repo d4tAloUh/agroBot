@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from sales.models import SalesPlacement
+from sales.models import SalePlacement
 from tgbot.handlers.sale_detail.handlers import callback_sale_detail
 from tgbot.handlers.sales.utils import get_choose_sale_callback_data, get_go_back_from_choose_sale_callback_data, \
     get_sale_chosen_callback_data, get_sale_button_text
@@ -21,7 +21,7 @@ def callback_sale_chosen(update: Update, context: CallbackContext) -> None:
 
 
 def callback_sales_choosing(update: Update, context: CallbackContext) -> None:
-    sales = SalesPlacement.objects.filter(
+    sales = SalePlacement.objects.filter(
         company__tg_user_id=update.effective_chat.id
     ).select_related('product').order_by('-created_at')
     page = extract_page(update.callback_query.data)

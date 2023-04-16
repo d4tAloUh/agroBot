@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from sales.models import SalesPlacement
+from sales.models import SalePlacement
 from tgbot.handlers.sale_detail.keyboards import make_sale_detail_keyboard
 from tgbot.handlers.utils.helpers import extract_id
 
@@ -17,9 +17,9 @@ def callback_sale_detail(update: Update, context: CallbackContext) -> None:
     sale_id = context.user_data.get("selected_sale")
     if not sale_id:
         callback_sales_choosing(update, context)
-    sale = SalesPlacement.objects.filter(
+    sale = SalePlacement.objects.filter(
         company__tg_user_id=update.effective_chat.id,
-        status=SalesPlacement.StatusChoice.POSTED.value,
+        status=SalePlacement.StatusChoice.POSTED.value,
         id=sale_id
     ).select_related('product').first()
     if not sale:
