@@ -9,6 +9,7 @@ from telegram.ext import (
 )
 
 from dtb.settings import DEBUG
+from tgbot.handlers.sale_buying.manage_data import CHOOSE_PRODUCT_INTEREST_CALLBACK, PRODUCT_INTEREST_CHOSEN_CALLBACK
 from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
@@ -23,7 +24,7 @@ from tgbot.handlers.sale_creation.vat.manage_data import CHOOSE_VAT_CALLBACK, CH
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
 from tgbot.handlers.sale_creation.weight.static_text import WEIGHT_STEP_NAME
 from tgbot.handlers.sale_detail.manage_data import DELETE_SALE_CALLBACK
-from tgbot.handlers.sales.manage_data import CHOOSE_SALE_CALLBACK, SALE_CHOSEN_CALLBACK
+from tgbot.handlers.sale_list.manage_data import CHOOSE_SALE_CALLBACK, SALE_CHOSEN_CALLBACK
 
 from tgbot.handlers.utils import error
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
@@ -44,8 +45,10 @@ from tgbot.handlers.sale_creation.currency import handlers as currency_handlers
 from tgbot.handlers.sale_creation.price_type import handlers as price_type_handlers
 from tgbot.handlers.sale_creation.vat import handlers as vat_handlers
 from tgbot.handlers.sale_creation.create_sale import handlers as sale_creation_handlers
-from tgbot.handlers.sales import handlers as sales_handlers
+from tgbot.handlers.sale_list import handlers as sales_handlers
 from tgbot.handlers.sale_detail import handlers as sale_detail_handlers
+from tgbot.handlers.sale_buying import handlers as sale_buying_handlers
+from tgbot.handlers.utils.static_text import callback_separator
 
 from tgbot.main import bot
 
@@ -88,11 +91,11 @@ def setup_dispatcher(dp):
     # Handle product selection
     dp.add_handler(
         CallbackQueryHandler(product_choosing_sales_handler.callback_product_choosing,
-                             pattern=f"^{CHOOSE_PRODUCT_CALLBACK}")
+                             pattern=f"^{CHOOSE_PRODUCT_CALLBACK}{callback_separator}")
     )
     dp.add_handler(
         CallbackQueryHandler(product_choosing_sales_handler.callback_product_chosen,
-                             pattern=f"^{PRODUCT_CHOSEN_CALLBACK}")
+                             pattern=f"^{PRODUCT_CHOSEN_CALLBACK}{callback_separator}")
     )
     # Handle weight input in TypeHandler
     # Handle weight go back callback
@@ -178,7 +181,7 @@ def setup_dispatcher(dp):
                              pattern=f"^{ACCEPT_SALE_CALLBACK}")
     )
 
-    # Handle my sales
+    # Handle my sale_list
     dp.add_handler(
         CallbackQueryHandler(sales_handlers.callback_sales_choosing,
                              pattern=f"^{CHOOSE_SALE_CALLBACK}")
@@ -192,6 +195,16 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(sale_detail_handlers.callback_sale_delete,
                              pattern=f"^{DELETE_SALE_CALLBACK}")
+    )
+
+    # handling product interest (sale buying)
+    dp.add_handler(
+        CallbackQueryHandler(sale_buying_handlers.callback_product_choosing,
+                             pattern=f"^{CHOOSE_PRODUCT_INTEREST_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(sale_buying_handlers.callback_product_choosing,
+                             pattern=f"^{PRODUCT_INTEREST_CHOSEN_CALLBACK}")
     )
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)

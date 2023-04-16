@@ -201,7 +201,7 @@ class SalePlacement(CreateUpdateTracker):
         return sale
 
 
-class SaleInterest(CreateUpdateTracker):
+class ProductInterest(CreateUpdateTracker):
     company = models.ForeignKey(CompanyAccount,
                                 on_delete=models.CASCADE,
                                 related_name="sale_interests")
@@ -210,6 +210,6 @@ class SaleInterest(CreateUpdateTracker):
                                 related_name="sale_interests")
 
     class Meta:
-        verbose_name = 'Sale Interest'
-        verbose_name_plural = 'Sale Interests'
+        verbose_name = 'Product Interest'
+        verbose_name_plural = 'Product Interests'
         unique_together = ['company', 'product']

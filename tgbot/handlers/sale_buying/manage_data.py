@@ -1,0 +1,2 @@
+CHOOSE_PRODUCT_INTEREST_CALLBACK = 'choose_product_interest'
+PRODUCT_INTEREST_CHOSEN_CALLBACK = 'choosen_product_interest'

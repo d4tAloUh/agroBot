@@ -4,11 +4,11 @@ from telegram.ext import CallbackContext
 
 from sales.models import SalePlacement
 from tgbot.handlers.sale_detail.handlers import callback_sale_detail
-from tgbot.handlers.sales.utils import get_choose_sale_callback_data, get_go_back_from_choose_sale_callback_data, \
+from tgbot.handlers.sale_list.utils import get_choose_sale_callback_data, get_go_back_from_choose_sale_callback_data, \
     get_sale_chosen_callback_data, get_sale_button_text
 from tgbot.handlers.utils.helpers import extract_page, extract_id
 
-from tgbot.handlers.sales import static_text
+from tgbot.handlers.sale_list import static_text
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
 

@@ -1,4 +1,5 @@
 create_new_sale_text = "Продати"
+choose_sale_interest_text = "Купити"
 my_sales_text = "Мої продажі"
 unregistered_text = "Ви не зарєстровані."
 greeting_text = "Чим можу допомогти?"

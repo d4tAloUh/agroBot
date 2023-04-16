@@ -13,7 +13,7 @@ def callback_sale_delete(update: Update, context: CallbackContext) -> None:
 
 
 def callback_sale_detail(update: Update, context: CallbackContext) -> None:
-    from tgbot.handlers.sales.handlers import callback_sales_choosing
+    from tgbot.handlers.sale_list.handlers import callback_sales_choosing
     sale_id = context.user_data.get("selected_sale")
     if not sale_id:
         callback_sales_choosing(update, context)

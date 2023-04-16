@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalePlacement, SaleInterest
+from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalePlacement, ProductInterest
 from dtb.settings import TELEGRAM_BOT_USERNAME
 
 
@@ -96,13 +96,13 @@ class SalesPlacementAdmin(admin.ModelAdmin):
     product_name.short_description = 'Товар'
 
 
-@admin.register(SaleInterest)
-class SaleInterestAdmin(admin.ModelAdmin):
+@admin.register(ProductInterest)
+class ProductnterestAdmin(admin.ModelAdmin):
     list_display = [
         'company', 'product',
     ]
     search_fields = ('name',)
 
-    def product(self, obj: SaleInterest):
+    def product(self, obj: ProductInterest):
         return obj.product.name
 
