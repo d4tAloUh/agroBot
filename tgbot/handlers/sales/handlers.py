@@ -23,7 +23,7 @@ def callback_sale_chosen(update: Update, context: CallbackContext) -> None:
 def callback_sales_choosing(update: Update, context: CallbackContext) -> None:
     sales = SalesPlacement.objects.filter(
         company__tg_user_id=update.effective_chat.id
-    ).select_related('product').order_by('created_at')
+    ).select_related('product').order_by('-created_at')
     page = extract_page(update.callback_query.data)
     paginator = Paginator(
         object_list=sales,

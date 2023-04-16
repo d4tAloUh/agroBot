@@ -33,6 +33,10 @@ class CompanyAccount(CreateUpdateTracker):
 
         super().save(*args, **kwargs)
 
+    @property
+    def is_registered(self) -> bool:
+        return bool(self.tg_user_id)
+
 
 class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
@@ -144,17 +148,18 @@ class SalesPlacement(CreateUpdateTracker):
                               max_length=32)
 
     class Meta:
+        ordering = ['-created_at']
         verbose_name = 'Sale placement'
         verbose_name_plural = 'Sale Placements'
 
     def __str__(self):
         return f"{self.product} | {self.company}"
-    
+
     def get_context_for_sale(self):
         return {
             "sale": self
         }
-    
+
     def generate_sale_text(self):
         template = get_template('sale.html')
         context = self.get_context_for_sale()
@@ -164,7 +169,7 @@ class SalesPlacement(CreateUpdateTracker):
         template = get_template('sale_preview.html')
         context = self.get_context_for_sale()
         return template.render(context)
-    
+
     @staticmethod
     def create_unsaved_sale_from_user_data(chat_id, user_data):
         company_account = CompanyAccount.objects.filter(

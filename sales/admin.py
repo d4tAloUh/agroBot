@@ -4,18 +4,28 @@ from django.utils.safestring import mark_safe
 from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalesPlacement
 from dtb.settings import TELEGRAM_BOT_USERNAME
 
+
 @admin.register(CompanyAccount)
 class CompanyAccountAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'tov', 'name', 'phone',
-        'account_link_url'
+        'account_link_url', 'is_registered'
     ]
     search_fields = ('name', 'tov', 'phone')
+
     def account_link_url(self, obj: CompanyAccount):
         return mark_safe(
             f"<a href='https://t.me/{TELEGRAM_BOT_USERNAME}?start={obj.invite_code}'>Лінк</a>"
         )
+
     account_link_url.short_description = 'Invite link'
+
+    def is_registered(self, obj: CompanyAccount):
+        return obj.is_registered
+
+    is_registered.short_description = 'Is registered'
+    is_registered.boolean = True
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
