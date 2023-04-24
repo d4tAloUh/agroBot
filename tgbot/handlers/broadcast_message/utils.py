@@ -26,22 +26,6 @@ def from_celery_markup_to_markup(celery_markup: Optional[List[List[Dict]]]) -> O
     return markup
 
 
-def from_celery_entities_to_entities(celery_entities: Optional[List[Dict]] = None) -> Optional[List[MessageEntity]]:
-    entities = None
-    if celery_entities:
-        entities = [
-            MessageEntity(
-                type=entity['type'],
-                offset=entity['offset'],
-                length=entity['length'],
-                url=entity.get('url'),
-                language=entity.get('language'),
-            )
-            for entity in celery_entities
-        ]
-    return entities
-
-
 def send_one_message(
     user_id: Union[str, int],
     text: str,
@@ -49,7 +33,6 @@ def send_one_message(
     reply_markup: Optional[List[List[Dict]]] = None,
     reply_to_message_id: Optional[int] = None,
     disable_web_page_preview: Optional[bool] = None,
-    entities: Optional[List[MessageEntity]] = None,
     tg_token: str = TELEGRAM_TOKEN,
 ) -> bool:
     bot = telegram.Bot(tg_token)
@@ -61,7 +44,6 @@ def send_one_message(
             reply_markup=reply_markup,
             reply_to_message_id=reply_to_message_id,
             disable_web_page_preview=disable_web_page_preview,
-            entities=entities,
         )
     except telegram.error.Unauthorized:
         print(f"Can't send message to {user_id}. Reason: Bot was stopped.")

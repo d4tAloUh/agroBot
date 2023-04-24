@@ -1,6 +1,10 @@
+from typing import Self
+
 from django.db import models
 from django.template.loader import get_template
 from django.utils.crypto import get_random_string
+
+from users.tasks import broadcast_message
 from users.models import TelegramUser
 from utils.models import CreateUpdateTracker, nb
 
@@ -199,6 +203,18 @@ class SalePlacement(CreateUpdateTracker):
             status=SalePlacement.StatusChoice.POSTED.value
         )
         return sale
+
+    def get_possible_buyers_telegram_ids(self: Self) -> [int]:
+        return TelegramUser.objects.exclude(company_account=self.company).filter(
+            company_account__sale_interests__product=self.product,
+        ).values_list('user_id', flat=True).distinct()
+
+    def broadcast_sale_text(self: Self, text: str):
+        user_ids = self.get_possible_buyers_telegram_ids()
+        broadcast_message.delay(
+            text=text,
+            user_ids=list(user_ids)
+        )
 
 
 class ProductInterest(CreateUpdateTracker):

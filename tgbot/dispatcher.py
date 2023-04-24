@@ -3,9 +3,10 @@
 """
 from telegram import Update
 from telegram.ext import (
-    Dispatcher, Filters,
-    CommandHandler, MessageHandler,
-    CallbackQueryHandler, TypeHandler, CallbackContext, DispatcherHandlerStop,
+    Dispatcher,
+    CommandHandler,
+    CallbackQueryHandler, TypeHandler,
+    CallbackContext, DispatcherHandlerStop,
 )
 
 from dtb.settings import DEBUG
@@ -76,13 +77,6 @@ def setup_dispatcher(dp):
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
-    # broadcast message
-    # dp.add_handler(
-    #     MessageHandler(Filters.regex(rf'^{broadcast_command}(/s)?.*'), broadcast_handlers.broadcast_command_with_message)
-    # )
-    # dp.add_handler(
-    #     CallbackQueryHandler(broadcast_handlers.broadcast_decision_handler, pattern=f"^{CONFIRM_DECLINE_BROADCAST}")
-    # )
     # Handle menu callback
     dp.add_handler(
         CallbackQueryHandler(menu_handlers.callback_menu,

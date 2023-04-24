@@ -20,6 +20,7 @@ def callback_confirm_sale_creation(update: Update, context: CallbackContext) -> 
         sale_text,
         parse_mode=ParseMode.HTML
     )
+    sale.broadcast_sale_text(sale_text)
     # Force to send message
     update.callback_query = None
     callback_menu(update, context)
