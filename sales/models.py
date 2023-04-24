@@ -172,6 +172,11 @@ class SalePlacement(CreateUpdateTracker):
         context = self.get_context_for_sale()
         return template.render(context)
 
+    def generate_sale_inactive_text(self):
+        template = get_template('sale_inactive.html')
+        context = self.get_context_for_sale()
+        return template.render(context)
+
     @staticmethod
     def create_unsaved_sale_from_user_data(chat_id, user_data):
         company_account = CompanyAccount.objects.filter(
@@ -209,6 +214,13 @@ class SalePlacement(CreateUpdateTracker):
             company_account__sale_interests__product=self.product,
         ).values_list('user_id', flat=True).distinct()
 
+    def get_sent_messages(self: Self) -> [int]:
+        return TelegramUser.objects.exclude(
+            company_account=self.company
+        ).filter(
+            company_account__sale_interests__product=self.product,
+        ).values_list('user_id', flat=True).distinct()
+
     def broadcast_sale_text(self: Self, text: str):
         user_ids = self.get_possible_buyers_telegram_ids()
         broadcast_message.delay(
@@ -216,6 +228,13 @@ class SalePlacement(CreateUpdateTracker):
             user_ids=list(user_ids)
         )
 
+    def broadcast_sale_removal(self: Self):
+        user_ids = self.get_possible_buyers_telegram_ids()
+        broadcast_message.delay(
+            text=text,
+            user_ids=list(user_ids)
+        )
+        text = self.generate_sale_inactive_text()
 
 class ProductInterest(CreateUpdateTracker):
     company = models.ForeignKey(CompanyAccount,
