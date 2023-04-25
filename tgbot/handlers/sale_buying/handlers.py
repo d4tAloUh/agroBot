@@ -21,6 +21,7 @@ def callback_product_choosing(update: Update, context: CallbackContext) -> None:
         ).first()
         if not company_account:
             command_start(update, context)
+            return
         if value:
             ProductInterest.objects.update_or_create(
                 product_id=product_id,

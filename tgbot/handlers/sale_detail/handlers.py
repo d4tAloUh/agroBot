@@ -12,6 +12,11 @@ from tgbot.handlers.utils.helpers import extract_id
 def callback_sale_delete_confirm(update: Update, context: CallbackContext) -> None:
     from tgbot.handlers.sale_list.handlers import callback_sales_choosing
     sale_id = extract_id(update.callback_query.data)
+    sales_page = context.user_data.get("sales_page", 1)
+    if not sale_id:
+        update.callback_query.data = get_choose_sale_callback_data(sales_page)
+        callback_sales_choosing(update, context)
+        return
     # Save selected product id
     sale = SalePlacement.objects.filter(
         company__tg_user_id=update.effective_chat.id,
@@ -20,7 +25,6 @@ def callback_sale_delete_confirm(update: Update, context: CallbackContext) -> No
     ).select_related(
         'product', 'company', 'region', 'subregion', 'city'
     ).first()
-    sales_page = context.user_data.get("sales_page", 1)
     if not sale:
         update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
@@ -42,6 +46,11 @@ def callback_sale_delete_confirm(update: Update, context: CallbackContext) -> No
 def callback_sale_delete(update: Update, context: CallbackContext) -> None:
     from tgbot.handlers.sale_list.handlers import callback_sales_choosing
     sale_id = extract_id(update.callback_query.data)
+    sales_page = context.user_data.get("sales_page", 1)
+    if not sale_id:
+        update.callback_query.data = get_choose_sale_callback_data(sales_page)
+        callback_sales_choosing(update, context)
+        return
     sale = SalePlacement.objects.filter(
         company__tg_user_id=update.effective_chat.id,
         status=SalePlacement.StatusChoice.POSTED.value,
@@ -49,7 +58,6 @@ def callback_sale_delete(update: Update, context: CallbackContext) -> None:
     ).select_related(
         'product', 'company', 'region', 'subregion', 'city'
     ).first()
-    sales_page = context.user_data.get("sales_page", 1)
     if not sale:
         update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
@@ -66,8 +74,11 @@ def callback_sale_delete(update: Update, context: CallbackContext) -> None:
 def callback_sale_detail(update: Update, context: CallbackContext) -> None:
     from tgbot.handlers.sale_list.handlers import callback_sales_choosing
     sale_id = context.user_data.get("selected_sale")
+    sales_page = context.user_data.get("sales_page", 1)
     if not sale_id:
+        update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
+        return
     sale = SalePlacement.objects.filter(
         company__tg_user_id=update.effective_chat.id,
         status=SalePlacement.StatusChoice.POSTED.value,
@@ -75,7 +86,6 @@ def callback_sale_detail(update: Update, context: CallbackContext) -> None:
     ).select_related(
         'product', 'company', 'region', 'subregion', 'city'
     ).first()
-    sales_page = context.user_data.get("sales_page", 1)
     if not sale:
         update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
