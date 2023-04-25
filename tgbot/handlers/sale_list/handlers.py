@@ -21,7 +21,8 @@ def callback_sale_chosen(update: Update, context: CallbackContext) -> None:
 
 def callback_sales_choosing(update: Update, context: CallbackContext) -> None:
     sales = SalePlacement.objects.filter(
-        company__tg_user_id=update.effective_chat.id
+        company__tg_user_id=update.effective_chat.id,
+        status=SalePlacement.StatusChoice.POSTED.value,
     ).select_related('product').order_by('-created_at')
     page = extract_page(update.callback_query.data)
     context.user_data["sales_page"] = page
@@ -31,7 +32,7 @@ def callback_sales_choosing(update: Update, context: CallbackContext) -> None:
     )
     sales_page = paginator.get_page(page)
     keyboard = make_paginated_keyboard(
-        items = sales_page.object_list,
+        items=sales_page.object_list,
         page=page,
         is_last_page=not sales_page.has_next(),
         item_text_getter=get_sale_button_text,

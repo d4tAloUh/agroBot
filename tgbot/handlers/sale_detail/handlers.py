@@ -3,7 +3,6 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from sales.models import SalePlacement
-from tgbot.handlers.sale_detail import static_text
 from tgbot.handlers.sale_detail.keyboards import make_sale_detail_keyboard, make_delete_sale_confirmation_keyboard, \
     make_deleted_sale_detail_keyboard
 from tgbot.handlers.sale_list.utils import get_choose_sale_callback_data
@@ -23,7 +22,7 @@ def callback_sale_delete_confirm(update: Update, context: CallbackContext) -> No
     ).first()
     sales_page = context.user_data.get("sales_page", 1)
     if not sale:
-        update.callback_query = get_choose_sale_callback_data(sales_page)
+        update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
         return
 
@@ -52,7 +51,7 @@ def callback_sale_delete(update: Update, context: CallbackContext) -> None:
     ).first()
     sales_page = context.user_data.get("sales_page", 1)
     if not sale:
-        update.callback_query = get_choose_sale_callback_data(sales_page)
+        update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
         return
     keyboard = make_delete_sale_confirmation_keyboard(sale_id=sale_id)
@@ -78,7 +77,7 @@ def callback_sale_detail(update: Update, context: CallbackContext) -> None:
     ).first()
     sales_page = context.user_data.get("sales_page", 1)
     if not sale:
-        update.callback_query = get_choose_sale_callback_data(sales_page)
+        update.callback_query.data = get_choose_sale_callback_data(sales_page)
         callback_sales_choosing(update, context)
         return
     keyboard = make_sale_detail_keyboard(sale_id=sale_id, sales_page=sales_page)
