@@ -14,7 +14,6 @@ from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
 def callback_sale_chosen(update: Update, context: CallbackContext) -> None:
     sale_id = extract_id(update.callback_query.data)
-    # Save selected product id
     context.user_data["selected_sale"] = sale_id
     # Call next step
     callback_sale_detail(update, context)

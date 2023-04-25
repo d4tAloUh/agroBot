@@ -24,7 +24,7 @@ from tgbot.handlers.sale_creation.subregion.manage_data import SUBREGION_CHOSEN_
 from tgbot.handlers.sale_creation.vat.manage_data import CHOOSE_VAT_CALLBACK, CHOSEN_VAT_CALLBACK
 from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBACK
 from tgbot.handlers.sale_creation.weight.static_text import WEIGHT_STEP_NAME
-from tgbot.handlers.sale_detail.manage_data import DELETE_SALE_CALLBACK
+from tgbot.handlers.sale_detail.manage_data import DELETE_SALE_CALLBACK, CONFIRM_DELETE_SALE_CALLBACK
 from tgbot.handlers.sale_list.manage_data import CHOOSE_SALE_CALLBACK, SALE_CHOSEN_CALLBACK
 
 from tgbot.handlers.utils import error
@@ -191,6 +191,10 @@ def setup_dispatcher(dp):
                              pattern=f"^{DELETE_SALE_CALLBACK}")
     )
 
+    dp.add_handler(
+        CallbackQueryHandler(sale_detail_handlers.callback_sale_delete_confirm,
+                             pattern=f"^{CONFIRM_DELETE_SALE_CALLBACK}")
+    )
     # handling product interest (sale buying)
     dp.add_handler(
         CallbackQueryHandler(sale_buying_handlers.callback_product_choosing,
@@ -200,6 +204,7 @@ def setup_dispatcher(dp):
         CallbackQueryHandler(sale_buying_handlers.callback_product_choosing,
                              pattern=f"^{PRODUCT_INTEREST_CHOSEN_CALLBACK}")
     )
+
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)
 

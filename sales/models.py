@@ -4,7 +4,7 @@ from django.db import models
 from django.template.loader import get_template
 from django.utils.crypto import get_random_string
 
-from users.tasks import broadcast_message
+from users.tasks import broadcast_sale_message, broadcast_edit_message
 from users.models import TelegramUser
 from utils.models import CreateUpdateTracker, nb
 
@@ -177,6 +177,10 @@ class SalePlacement(CreateUpdateTracker):
         context = self.get_context_for_sale()
         return template.render(context)
 
+    def generate_sale_delete_confirmation_text(self):
+        template = get_template('sale_deletion_confirmation.html')
+        context = self.get_context_for_sale()
+        return template.render(context)
     @staticmethod
     def create_unsaved_sale_from_user_data(chat_id, user_data):
         company_account = CompanyAccount.objects.filter(
@@ -215,26 +219,26 @@ class SalePlacement(CreateUpdateTracker):
         ).values_list('user_id', flat=True).distinct()
 
     def get_sent_messages(self: Self) -> [int]:
-        return TelegramUser.objects.exclude(
-            company_account=self.company
-        ).filter(
-            company_account__sale_interests__product=self.product,
-        ).values_list('user_id', flat=True).distinct()
+        return SentSaleMessage.objects.filter(
+            sale=self
+        ).values_list('chat__user_id', 'message_id').distinct()
 
     def broadcast_sale_text(self: Self, text: str):
         user_ids = self.get_possible_buyers_telegram_ids()
-        broadcast_message.delay(
+        broadcast_sale_message.delay(
+            sale_id=self.pk,
             text=text,
             user_ids=list(user_ids)
         )
 
-    def broadcast_sale_removal(self: Self):
-        user_ids = self.get_possible_buyers_telegram_ids()
-        broadcast_message.delay(
+    def broadcast_sale_removal(self: Self, text: str):
+        user_with_messages_ids = self.get_sent_messages()
+        broadcast_edit_message.delay(
             text=text,
-            user_ids=list(user_ids)
+            user_with_messages_ids=list(user_with_messages_ids),
+            sale_id=self.pk
         )
-        text = self.generate_sale_inactive_text()
+
 
 class ProductInterest(CreateUpdateTracker):
     company = models.ForeignKey(CompanyAccount,
@@ -248,3 +252,18 @@ class ProductInterest(CreateUpdateTracker):
         verbose_name = 'Product Interest'
         verbose_name_plural = 'Product Interests'
         unique_together = ['company', 'product']
+
+
+class SentSaleMessage(CreateUpdateTracker):
+    message_id = models.CharField(max_length=512)
+    chat = models.ForeignKey(TelegramUser,
+                             on_delete=models.CASCADE,
+                             related_name="sale_messages")
+    sale = models.ForeignKey(SalePlacement,
+                             on_delete=models.CASCADE,
+                             related_name="sale_messages")
+
+    class Meta:
+        verbose_name = 'Sent Sale Message'
+        verbose_name_plural = 'Sent Sale Messages'
+        unique_together = ['message_id', 'chat']

@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalePlacement, ProductInterest
+from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalePlacement, ProductInterest, \
+    SentSaleMessage
 from dtb.settings import TELEGRAM_BOT_USERNAME
 
 
@@ -106,3 +107,16 @@ class ProductnterestAdmin(admin.ModelAdmin):
     def product(self, obj: ProductInterest):
         return obj.product.name
 
+
+@admin.register(SentSaleMessage)
+class SentSaleMessageAdmin(admin.ModelAdmin):
+    list_display = [
+        'sale', 'message_id', 'chat',
+    ]
+    search_fields = ('chat__username', 'chat__user_id',)
+
+    def chat(self, obj: SentSaleMessage):
+        return obj.chat
+
+    def sale(self, obj: SentSaleMessage):
+        return obj.sale.pk

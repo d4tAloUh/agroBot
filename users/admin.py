@@ -3,12 +3,12 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from dtb.settings import DEBUG
+from sales.utils import send_one_message
 
 from users.models import TelegramUser
 from users.forms import BroadcastForm
 
-from users.tasks import broadcast_message
-from tgbot.handlers.broadcast_message.utils import send_one_message
+from users.tasks import broadcast_sale_message
 
 
 @admin.register(TelegramUser)
@@ -35,7 +35,7 @@ class TelegramUserAdmin(admin.ModelAdmin):
                     )
                 self.message_user(request, f"Just broadcasted to {len(queryset)} users")
             else:
-                broadcast_message.delay(text=broadcast_message_text, user_ids=list(user_ids))
+                broadcast_sale_message.delay(text=broadcast_message_text, user_ids=list(user_ids))
                 self.message_user(request, f"Broadcasting of {len(queryset)} messages has been started")
 
             return HttpResponseRedirect(request.get_full_path())

@@ -1,7 +1,8 @@
+from types import NoneType
 from typing import Union, Optional, Dict, List
 
 import telegram
-from telegram import MessageEntity, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import MessageEntity, InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from dtb.settings import TELEGRAM_TOKEN
 from users.models import TelegramUser
@@ -34,10 +35,11 @@ def send_one_message(
     reply_to_message_id: Optional[int] = None,
     disable_web_page_preview: Optional[bool] = None,
     tg_token: str = TELEGRAM_TOKEN,
-) -> bool:
+) -> (bool, Optional[Message]):
     bot = telegram.Bot(tg_token)
+    message = None
     try:
-        bot.send_message(
+        message = bot.send_message(
             chat_id=user_id,
             text=text,
             parse_mode=parse_mode,
@@ -50,4 +52,4 @@ def send_one_message(
         success = False
     else:
         success = True
-    return success
+    return success, message
