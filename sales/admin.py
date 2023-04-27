@@ -65,10 +65,10 @@ class CityAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
     def region_name(self, obj: City):
-        return obj.region.name
+        return obj.region and obj.region.name or '-'
 
     def subregion_name(self, obj: City):
-        return obj.subregion.name
+        return obj.subregion and obj.subregion.name or '-'
 
 
 @admin.register(SalePlacement)

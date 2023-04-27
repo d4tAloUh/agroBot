@@ -1,23 +1,32 @@
 from django.core.paginator import Paginator
+from django.db.models import Value
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from sales.models import SubRegion
+from sales.models import SubRegion, City
+from tgbot.handlers.sale_creation.basis.handlers import callback_basis_input
 from tgbot.handlers.sale_creation.city.handlers import callback_city_choosing
 from tgbot.handlers.sale_creation.region.utils import get_choose_region_callback_data
 from tgbot.handlers.sale_creation.subregion import static_text
 from tgbot.handlers.sale_creation.subregion.utils import get_subregion_chosen_callback_data, get_choose_subregion_callback_data
-from tgbot.handlers.utils.helpers import extract_page, extract_id
+from tgbot.handlers.utils.helpers import extract_page, extract_id, extract_is_city
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
 
 def callback_subregion_chosen(update: Update, context: CallbackContext) -> None:
-    subregion_id = extract_id(update.callback_query.data)
-    # Save selected product id
-    context.user_data["subregion_id"] = subregion_id
-    # Call next step
-    update.callback_query.data = get_choose_subregion_callback_data(1)
-    callback_city_choosing(update, context)
+    entity_id = extract_id(update.callback_query.data)
+    is_city = extract_is_city(update.callback_query.data)
+    if is_city == 'True':
+        # Save selected product id
+        context.user_data["city_id"] = entity_id
+        # Call next step
+        callback_basis_input(update, context)
+    else:
+        # Save selected product id
+        context.user_data["subregion_id"] = entity_id
+        # Call next step
+        update.callback_query.data = get_choose_subregion_callback_data(1)
+        callback_city_choosing(update, context)
 
 
 def callback_subregion_choosing(update: Update, context: CallbackContext) -> None:
@@ -27,10 +36,18 @@ def callback_subregion_choosing(update: Update, context: CallbackContext) -> Non
     # TODO: handle region id being none (skip to choose product)
 
     subregions = SubRegion.objects.all()
+    cities = City.objects.all()
     if region_id:
-        subregions = subregions.filter(region_id=region_id)
+        cities = cities.filter(
+            region_id=region_id,
+            subregion__isnull=True
+        ).annotate(city=Value(True)).values("pk", "name", "city")
+        subregions = subregions.filter(
+            region_id=region_id
+        ).annotate(city=Value(False)).values("pk", "name", "city")
+    results = cities.union(subregions).order_by("-city", "name")
     paginator = Paginator(
-        object_list=subregions,
+        object_list=results,
         per_page=static_text.subregion_per_row * static_text.subregion_rows
     )
 
@@ -39,6 +56,7 @@ def callback_subregion_choosing(update: Update, context: CallbackContext) -> Non
     keyboard = make_paginated_keyboard(
         items=products_page.object_list,
         page=page,
+        item_text_getter=lambda x: x["name"],
         is_last_page=not products_page.has_next(),
         get_item_callback=get_subregion_chosen_callback_data,
         prev_page_callback=get_choose_subregion_callback_data(page - 1),

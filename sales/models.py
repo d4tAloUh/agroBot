@@ -86,10 +86,10 @@ class City(CreateUpdateTracker):
     name = models.CharField(max_length=512)
     region = models.ForeignKey(Region,
                                on_delete=models.CASCADE,
-                               related_name="cities")
+                               related_name="cities", **nb)
     subregion = models.ForeignKey(SubRegion,
                                   on_delete=models.CASCADE,
-                                  related_name="cities")
+                                  related_name="cities", **nb)
 
     class Meta:
         ordering = ['name']

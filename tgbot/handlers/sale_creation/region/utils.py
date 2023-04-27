@@ -4,8 +4,8 @@ from tgbot.handlers.sale_creation.weight.manage_data import INPUT_WEIGHT_CALLBAC
 from tgbot.handlers.utils.static_text import callback_separator
 
 
-def get_region_chosen_callback_data(region: Region) -> str:
-    return f"{REGION_CHOSEN_CALLBACK}{callback_separator}{region.pk}"
+def get_region_chosen_callback_data(region: dict) -> str:
+    return f"{REGION_CHOSEN_CALLBACK}{callback_separator}{region['pk']}{callback_separator}{region['city']}"
 
 
 def get_choose_region_callback_data(page: int) -> str:
