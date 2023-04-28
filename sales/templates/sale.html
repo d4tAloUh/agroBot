@@ -3,7 +3,7 @@
 
 🌱  {% if sale.product %}{{ sale.product }}{% else %}Не знайдено такого товару, перестворіть оголошення{% endif %}
 🚛  {% if sale.weight %}{{ sale.weight }} МТ{% else %}Не введено тоннаж, перестворіть оголошення{% endif %}
-🗺️  {% if sale.region or sale.city %}{% if sale.region %}{{ sale.region.name }} обл., {% endif %}{% if sale.subregion %}{{sale.subregion.name}} рн., {% endif %}{% if sale.city %}{{sale.city.name}}{% endif %}{% else %}Не обрано місцезнаходження, перестворіть оголошення{% endif %}
+🗺️  {% if sale.region or sale.city %}{% if sale.region %}{{ sale.region.name }}, {% endif %}{% if sale.subregion %}{{sale.subregion.name}}, {% endif %}{% if sale.city %}{{sale.city.name}}{% endif %}{% else %}Не обрано місцезнаходження, перестворіть оголошення{% endif %}
 ⛳️  {% if sale.basis %}{{ sale.basis }}{% else %}Не обрано Базис, перестворіть оголошення{% endif %}
 🪙  {% if sale.price and sale.currency and sale.price_type %}{{ sale.price }}, {{ sale.get_currency_display }} ({{ sale.get_price_type_display }}{% if sale.vat %}, {{ sale.get_vat_display }}{% endif %}){% else %}Неправильно введено ціну, перестворіть оголошення{% endif %}
 {% if sale.company %}
