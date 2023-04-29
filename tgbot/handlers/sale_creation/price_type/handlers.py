@@ -14,6 +14,7 @@ from tgbot.handlers.sale_creation.price_type import static_text
 def callback_price_type_chosen(update: Update, context: CallbackContext) -> None:
     price_type_string = extract_string(update.callback_query.data)
     context.user_data["price_type"] = price_type_string
+    context.user_data["vat"] = None
     # Call next step
     if price_type_string == SalePlacement.PriceTypeChoice.F1.value:
         callback_vat_choosing(update, context)
