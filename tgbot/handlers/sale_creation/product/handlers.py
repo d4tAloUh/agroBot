@@ -6,12 +6,14 @@ from sales.models import Product
 from tgbot.handlers.sale_creation.product.utils import get_product_chosen_callback_data, \
     get_choose_product_callback_data, get_go_back_from_choose_product_callback_data
 from tgbot.handlers.sale_creation.weight.handlers import callback_weight_input
-from tgbot.handlers.utils.helpers import extract_page, extract_id
+from tgbot.handlers.utils.helpers import extract_page, extract_id, clear_user_data_for_sale
 
 from tgbot.handlers.sale_creation.product import static_text
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
+
 def callback_product_chosen(update: Update, context: CallbackContext) -> None:
+    clear_user_data_for_sale(context)
     product_id = extract_id(update.callback_query.data)
     # Save selected product id
     context.user_data["product_id"] = product_id

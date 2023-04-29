@@ -1,9 +1,9 @@
 from telegram import Update, ParseMode, Message
 from telegram.ext import CallbackContext
 
-from sales.models import SalePlacement, CompanyAccount
+from sales.models import SalePlacement
 from tgbot.handlers.menu.handlers import callback_menu
-from tgbot.handlers.sale_creation.create_sale.keyboards import make_sales_preview_keyboard, create_new_sale_keyboard
+from tgbot.handlers.sale_creation.create_sale.keyboards import make_sales_preview_keyboard
 from tgbot.handlers.sale_creation.create_sale import static_text
 from tgbot.handlers.utils.helpers import delete_inline_keyboard_on_previous_inline_message
 

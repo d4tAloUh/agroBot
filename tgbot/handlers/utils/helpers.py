@@ -3,6 +3,7 @@ from typing import Dict
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from sales.models import SalePlacement
 from tgbot.handlers.utils import static_text
 
 
@@ -61,3 +62,7 @@ def delete_inline_keyboard_on_previous_inline_message(update: Update, context: C
         pass
 
 
+def clear_user_data_for_sale(context: CallbackContext):
+    for field in SalePlacement.USER_DATA_SALE_FIELDS:
+        if field in context.user_data:
+            del context.user_data[field]

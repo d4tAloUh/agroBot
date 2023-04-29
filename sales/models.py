@@ -121,7 +121,7 @@ class SalePlacement(CreateUpdateTracker):
     USER_DATA_SALE_FIELDS = [
         'product_id', 'region_id', 'subregion_id',
         'city_id', 'basis', 'weight', 'price',
-        'currency', 'price_type'
+        'currency', 'price_type', 'vat'
     ]
 
     company = models.ForeignKey(CompanyAccount,
