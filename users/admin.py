@@ -3,23 +3,20 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from dtb.settings import DEBUG
+from sales.utils import send_one_message
 
-from users.models import Location
-from users.models import User
+from users.models import TelegramUser
 from users.forms import BroadcastForm
 
-from users.tasks import broadcast_message
-from tgbot.handlers.broadcast_message.utils import send_one_message
+from users.tasks import broadcast_sale_message
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+@admin.register(TelegramUser)
+class TelegramUserAdmin(admin.ModelAdmin):
     list_display = [
-        'user_id', 'username', 'first_name', 'last_name', 
-        'language_code', 'deep_link',
-        'created_at', 'updated_at', "is_blocked_bot",
+        'user_id', 'username', 'first_name', 'last_name',
+        'created_at', 'updated_at',
     ]
-    list_filter = ["is_blocked_bot", ]
     search_fields = ('username', 'user_id')
 
     actions = ['broadcast']
@@ -38,7 +35,7 @@ class UserAdmin(admin.ModelAdmin):
                     )
                 self.message_user(request, f"Just broadcasted to {len(queryset)} users")
             else:
-                broadcast_message.delay(text=broadcast_message_text, user_ids=list(user_ids))
+                broadcast_sale_message.delay(text=broadcast_message_text, user_ids=list(user_ids))
                 self.message_user(request, f"Broadcasting of {len(queryset)} messages has been started")
 
             return HttpResponseRedirect(request.get_full_path())
@@ -48,7 +45,3 @@ class UserAdmin(admin.ModelAdmin):
                 request, "admin/broadcast_message.html", {'form': form, 'title': u'Broadcast message'}
             )
 
-
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_id', 'created_at']

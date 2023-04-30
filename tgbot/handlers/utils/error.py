@@ -7,13 +7,17 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from dtb.settings import TELEGRAM_LOGS_CHAT_ID
-from users.models import User
+from users.models import TelegramUser
 
 
 def send_stacktrace_to_tg_chat(update: Update, context: CallbackContext) -> None:
-    u = User.get_user(update, context)
-
+    u = TelegramUser.get_user(update, context)
+    logging.error("=====================================================")
     logging.error("Exception while handling an update:", exc_info=context.error)
+    logging.error("User data: %s", context.user_data)
+    logging.error("Callback query: %s", update.callback_query)
+    logging.error("Context args: %s", context.args)
+    logging.error("=====================================================")
 
     tb_list = traceback.format_exception(None, context.error, context.error.__traceback__)
     tb_string = ''.join(tb_list)
@@ -26,10 +30,9 @@ def send_stacktrace_to_tg_chat(update: Update, context: CallbackContext) -> None
     )
 
     user_message = """
-😔 Something broke inside the bot.
-It is because we are constantly improving our service but sometimes we might forget to test some basic stuff.
-We already received all the details to fix the issue.
-Return to /start
+😔 Щось пішло не так.
+
+Ми вже знаємо що, але спробуйте ще раз спочатку /start
 """
     context.bot.send_message(
         chat_id=u.user_id,
@@ -43,5 +46,3 @@ Return to /start
             text=admin_message,
             parse_mode=telegram.ParseMode.HTML,
         )
-    else:
-        logging.error(admin_message)
