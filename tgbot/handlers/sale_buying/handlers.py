@@ -46,6 +46,8 @@ def callback_product_choosing(update: Update, context: CallbackContext) -> None:
     keyboard = make_paginated_keyboard(
         items = products_page.object_list,
         page=page,
+        per_row=static_text.products_per_row,
+        rows=static_text.product_rows,
         item_text_getter=get_product_interest_text_function(interests),
         is_last_page=not products_page.has_next(),
         get_item_callback=get_product_interest_chosen_callback_data_function(page, interests),

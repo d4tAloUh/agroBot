@@ -1,4 +1,4 @@
-from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
+from tgbot.handlers.sale_creation.basis.manage_data import CHOOSE_BASIS_CALLBACK
 from tgbot.handlers.sale_creation.price_type.manage_data import CHOOSE_PRICE_TYPE_CALLBACK
 
 

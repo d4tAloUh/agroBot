@@ -4,6 +4,7 @@ from telegram.ext import CallbackContext
 from sales.models import CompanyAccount
 from tgbot.handlers.menu.keyboards import make_menu_keyboard
 from tgbot.handlers.onboarding import static_text
+from tgbot.handlers.utils.helpers import clear_user_data_for_sale
 from users.models import TelegramUser
 
 
@@ -25,6 +26,7 @@ def command_start(update: Update, context: CallbackContext) -> None:
             keyboard = make_menu_keyboard()
     if text is None:
         if u.is_registered:
+            clear_user_data_for_sale(context)
             text = static_text.greeting_text
             keyboard = make_menu_keyboard()
         else:

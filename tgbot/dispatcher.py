@@ -11,7 +11,7 @@ from telegram.ext import (
 
 from dtb.settings import DEBUG
 from tgbot.handlers.sale_buying.manage_data import CHOOSE_PRODUCT_INTEREST_CALLBACK, PRODUCT_INTEREST_CHOSEN_CALLBACK
-from tgbot.handlers.sale_creation.basis.manage_data import INPUT_BASIS_CALLBACK
+from tgbot.handlers.sale_creation.basis.manage_data import CHOOSE_BASIS_CALLBACK, CHOSEN_BASIS_CALLBACK
 from tgbot.handlers.sale_creation.basis.static_text import BASIS_STEP_NAME
 from tgbot.handlers.sale_creation.city.manage_data import CHOOSE_CITY_CALLBACK, CITY_CHOSEN_CALLBACK
 from tgbot.handlers.sale_creation.create_sale.manage_data import ACCEPT_SALE_CALLBACK
@@ -31,7 +31,8 @@ from tgbot.handlers.utils import error
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
 
 from tgbot.handlers.sale_creation.product import handlers as product_choosing_sales_handler
-from tgbot.handlers.sale_creation.product.manage_data import CHOOSE_PRODUCT_CALLBACK, PRODUCT_CHOSEN_CALLBACK
+from tgbot.handlers.sale_creation.product.manage_data import CHOOSE_PRODUCT_CALLBACK, PRODUCT_CHOSEN_CALLBACK, \
+    GO_BACK_FROM_PRODUCT_TYPE_CALLBACK
 
 from tgbot.handlers.menu.manage_data import MENU_CALLBACK_DATA
 from tgbot.handlers.menu import handlers as menu_handlers
@@ -61,9 +62,6 @@ def setup_type_handler(update: Update, context: CallbackContext) -> None:
         if context.user_data.get("current_step", None) == WEIGHT_STEP_NAME:
             weight_handlers.callback_weight_input(update, context)
             raise DispatcherHandlerStop
-        if context.user_data.get("current_step", None) == BASIS_STEP_NAME:
-            basis_handlers.callback_basis_input(update, context)
-            raise DispatcherHandlerStop
         if context.user_data.get("current_step", None) == PRICE_STEP_NAME:
             price_handlers.callback_price_input(update, context)
             raise DispatcherHandlerStop
@@ -90,6 +88,10 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(product_choosing_sales_handler.callback_product_chosen,
                              pattern=f"^{PRODUCT_CHOSEN_CALLBACK}{callback_separator}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(product_choosing_sales_handler.callback_go_back_from_product_type,
+                             pattern=f"^{GO_BACK_FROM_PRODUCT_TYPE_CALLBACK}")
     )
     # Handle weight input in TypeHandler
     # Handle weight go back callback
@@ -129,8 +131,12 @@ def setup_dispatcher(dp):
 
     # Handle go back to basis callback
     dp.add_handler(
-        CallbackQueryHandler(basis_handlers.callback_basis_input,
-                             pattern=f"^{INPUT_BASIS_CALLBACK}")
+        CallbackQueryHandler(basis_handlers.callback_basis_choosing,
+                             pattern=f"^{CHOOSE_BASIS_CALLBACK}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(basis_handlers.callback_basis_chosen,
+                             pattern=f"^{CHOSEN_BASIS_CALLBACK}")
     )
 
     # Handle go back to price callback

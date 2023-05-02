@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from sales.models import CompanyAccount, Product, SubRegion, Region, City, SalePlacement, ProductInterest, \
-    SentSaleMessage
+    SentSaleMessage, ProductType
 from dtb.settings import TELEGRAM_BOT_USERNAME
 
 
@@ -30,6 +30,15 @@ class CompanyAccountAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 'name',
+    ]
+    search_fields = ('name',)\
+
+
+
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'name',
     ]

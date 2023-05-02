@@ -4,25 +4,25 @@ from telegram import Update, Message
 from telegram.ext import CallbackContext
 
 from sales.models import Region, City
-from tgbot.handlers.sale_creation.basis.handlers import callback_basis_input
+from tgbot.handlers.sale_creation.basis.handlers import callback_basis_choosing
 from tgbot.handlers.sale_creation.region import static_text
 from tgbot.handlers.sale_creation.region.utils import get_region_chosen_callback_data, get_choose_region_callback_data, \
     get_go_back_from_choose_region_callback_data
 from tgbot.handlers.sale_creation.subregion.handlers import callback_subregion_choosing
 from tgbot.handlers.sale_creation.subregion.utils import get_choose_subregion_callback_data
 from tgbot.handlers.utils.helpers import extract_page, extract_id, delete_inline_keyboard_on_previous_inline_message, \
-    extract_is_city
+    extract_second_parameter
 from tgbot.handlers.utils.keyboards import make_paginated_keyboard
 
 
 def callback_region_chosen(update: Update, context: CallbackContext) -> None:
     entity_id = extract_id(update.callback_query.data)
-    is_city = extract_is_city(update.callback_query.data)
+    is_city = extract_second_parameter(update.callback_query.data)
     if is_city == 'True':
         # Save selected product id
         context.user_data["city_id"] = entity_id
         # Call next step
-        callback_basis_input(update, context)
+        callback_basis_choosing(update, context)
     else:
         # Save selected product id
         context.user_data["region_id"] = entity_id

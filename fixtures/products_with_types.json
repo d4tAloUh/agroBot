@@ -1,0 +1,100 @@
+[
+{
+  "model": "sales.product",
+  "pk": 10,
+  "fields": {
+    "created_at": "2023-04-15T11:35:45.784Z",
+    "updated_at": "2023-05-02T19:37:58.472Z",
+    "name": "Пшениця 2 клас",
+    "order": 1,
+    "product_type": 1
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 11,
+  "fields": {
+    "created_at": "2023-04-15T11:35:59.581Z",
+    "updated_at": "2023-05-02T19:38:02.224Z",
+    "name": "Пшениця 3 клас",
+    "order": 2,
+    "product_type": 1
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 12,
+  "fields": {
+    "created_at": "2023-04-15T11:36:05.647Z",
+    "updated_at": "2023-05-02T19:40:07.048Z",
+    "name": "Пшениця фураж",
+    "order": 3,
+    "product_type": 1
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 13,
+  "fields": {
+    "created_at": "2023-04-15T11:36:25.081Z",
+    "updated_at": "2023-04-15T11:43:24.086Z",
+    "name": "Кукурудза",
+    "order": 4,
+    "product_type": null
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 14,
+  "fields": {
+    "created_at": "2023-04-15T11:36:28.284Z",
+    "updated_at": "2023-04-15T11:43:28.189Z",
+    "name": "Ячмінь",
+    "order": 5,
+    "product_type": null
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 15,
+  "fields": {
+    "created_at": "2023-04-15T11:36:34.044Z",
+    "updated_at": "2023-04-15T11:43:31.454Z",
+    "name": "Ріпак",
+    "order": 6,
+    "product_type": null
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 16,
+  "fields": {
+    "created_at": "2023-04-15T11:36:37.498Z",
+    "updated_at": "2023-04-15T11:43:36.034Z",
+    "name": "Соєві боби",
+    "order": 7,
+    "product_type": null
+  }
+},
+{
+  "model": "sales.product",
+  "pk": 17,
+  "fields": {
+    "created_at": "2023-04-15T11:36:41.421Z",
+    "updated_at": "2023-04-15T11:43:41.735Z",
+    "name": "Соняшник",
+    "order": 8,
+    "product_type": null
+  }
+},
+{
+  "model": "sales.producttype",
+  "pk": 1,
+  "fields": {
+    "created_at": "2023-05-02T19:37:46.410Z",
+    "updated_at": "2023-05-02T19:37:46.410Z",
+    "name": "Пшениця",
+    "order": 0
+  }
+}
+]
