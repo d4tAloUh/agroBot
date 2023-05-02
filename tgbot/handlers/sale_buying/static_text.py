@@ -1,4 +1,4 @@
 products_per_row = 3
-product_rows = 2
+product_rows = 3
 go_back_text = 'Повернутись'
 choose_product_interest_text = 'Оберіть культури, купівля яких вас цікавить'

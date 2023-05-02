@@ -26,10 +26,7 @@ def extract_string(callback_text: str) -> str:
     return split_text[1]
 
 
-def extract_is_city(callback_text: str) -> str:
-    """
-        is_city should be second parameter after callback text
-    """
+def extract_second_parameter(callback_text: str) -> str:
     split_text = callback_text.split(static_text.callback_separator)
     return split_text[2]
 

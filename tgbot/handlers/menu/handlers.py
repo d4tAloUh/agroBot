@@ -3,10 +3,11 @@ from telegram.ext import CallbackContext
 
 from tgbot.handlers.menu.keyboards import make_menu_keyboard
 from tgbot.handlers.onboarding.static_text import greeting_text
-from tgbot.handlers.utils.helpers import delete_inline_keyboard_on_previous_inline_message
+from tgbot.handlers.utils.helpers import delete_inline_keyboard_on_previous_inline_message, clear_user_data_for_sale
 
 
 def callback_menu(update: Update, context: CallbackContext) -> None:
+    clear_user_data_for_sale(context)
     keyboard = make_menu_keyboard()
     if update.callback_query:
         update.callback_query.edit_message_text(

@@ -42,9 +42,25 @@ class CompanyAccount(CreateUpdateTracker):
         return bool(self.tg_user_id)
 
 
+class ProductType(CreateUpdateTracker):
+    name = models.CharField(max_length=512)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name = 'Product Type'
+        verbose_name_plural = 'Product Types'
+
+    def __str__(self):
+        return self.name
+
+
 class Product(CreateUpdateTracker):
     name = models.CharField(max_length=512)
     order = models.PositiveIntegerField(default=0)
+    product_type = models.ForeignKey(ProductType,
+                                     on_delete=models.SET_NULL,
+                                     related_name="products", **nb)
 
     class Meta:
         ordering = ['order']
@@ -119,7 +135,7 @@ class SalePlacement(CreateUpdateTracker):
         DELETED = 'deleted', 'Deleted'
 
     USER_DATA_SALE_FIELDS = [
-        'product_id', 'region_id', 'subregion_id',
+        'product_id', 'product_type', 'region_id', 'subregion_id',
         'city_id', 'basis', 'weight', 'price',
         'currency', 'price_type', 'vat'
     ]
@@ -181,6 +197,7 @@ class SalePlacement(CreateUpdateTracker):
         template = get_template('sale_deletion_confirmation.html')
         context = self.get_context_for_sale()
         return template.render(context)
+
     @staticmethod
     def create_unsaved_sale_from_user_data(chat_id, user_data):
         company_account = CompanyAccount.objects.filter(

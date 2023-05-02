@@ -31,7 +31,8 @@ from tgbot.handlers.utils import error
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
 
 from tgbot.handlers.sale_creation.product import handlers as product_choosing_sales_handler
-from tgbot.handlers.sale_creation.product.manage_data import CHOOSE_PRODUCT_CALLBACK, PRODUCT_CHOSEN_CALLBACK
+from tgbot.handlers.sale_creation.product.manage_data import CHOOSE_PRODUCT_CALLBACK, PRODUCT_CHOSEN_CALLBACK, \
+    GO_BACK_FROM_PRODUCT_TYPE_CALLBACK
 
 from tgbot.handlers.menu.manage_data import MENU_CALLBACK_DATA
 from tgbot.handlers.menu import handlers as menu_handlers
@@ -87,6 +88,10 @@ def setup_dispatcher(dp):
     dp.add_handler(
         CallbackQueryHandler(product_choosing_sales_handler.callback_product_chosen,
                              pattern=f"^{PRODUCT_CHOSEN_CALLBACK}{callback_separator}")
+    )
+    dp.add_handler(
+        CallbackQueryHandler(product_choosing_sales_handler.callback_go_back_from_product_type,
+                             pattern=f"^{GO_BACK_FROM_PRODUCT_TYPE_CALLBACK}")
     )
     # Handle weight input in TypeHandler
     # Handle weight go back callback
