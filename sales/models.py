@@ -196,7 +196,6 @@ class SalePlacement(CreateUpdateTracker):
         currency = user_data.get("currency")
         price_type = user_data.get("price_type")
         vat = user_data.get("vat")
-        print("Userdata:", user_data)
         sale = SalePlacement(
             company=company_account,
             product_id=product_id,

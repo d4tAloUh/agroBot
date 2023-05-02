@@ -38,7 +38,9 @@ def callback_product_choosing(update: Update, context: CallbackContext) -> None:
         prev_page_callback=get_choose_product_callback_data(page - 1),
         next_page_callback=get_choose_product_callback_data(page + 1),
         go_back_callback=get_go_back_from_choose_product_callback_data(),
-        go_back_text=static_text.go_back_text
+        go_back_text=static_text.go_back_text,
+        rows=static_text.product_rows,
+        per_row=static_text.products_per_row
     )
     update.callback_query.edit_message_text(
         static_text.choose_product_text,

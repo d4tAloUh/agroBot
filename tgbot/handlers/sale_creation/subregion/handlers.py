@@ -4,7 +4,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from sales.models import SubRegion, City
-from tgbot.handlers.sale_creation.basis.handlers import callback_basis_input
+from tgbot.handlers.sale_creation.basis.handlers import callback_basis_choosing
 from tgbot.handlers.sale_creation.city.handlers import callback_city_choosing
 from tgbot.handlers.sale_creation.region.utils import get_choose_region_callback_data
 from tgbot.handlers.sale_creation.subregion import static_text
@@ -20,7 +20,7 @@ def callback_subregion_chosen(update: Update, context: CallbackContext) -> None:
         # Save selected product id
         context.user_data["city_id"] = entity_id
         # Call next step
-        callback_basis_input(update, context)
+        callback_basis_choosing(update, context)
     else:
         # Save selected product id
         context.user_data["subregion_id"] = entity_id

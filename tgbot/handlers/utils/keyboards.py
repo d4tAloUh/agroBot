@@ -31,7 +31,8 @@ def make_paginated_keyboard(**kwargs) -> InlineKeyboardMarkup:
                 callback_data=next_page_callback
             )
         )
-    markup.append(row_markup)
+    if len(row_markup) > 0:
+        markup.append(row_markup)
     # Add items
     for row_num in range(rows):
         row_markup = []
